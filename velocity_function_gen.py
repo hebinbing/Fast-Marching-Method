@@ -1,7 +1,8 @@
+#! /usr/bin/env python3
+
 import h5py as h5
 import numpy as np
 import argparse
-import matplotlib
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--npts', type=int, default=201, help='Number of grid points per dimension')
@@ -14,8 +15,8 @@ file = h5.File('data/velocity_data.h5','w')
 data = np.ones((args.npts,args.npts))
 
 #Coordinates transformation
-i = int(np.floor((args.npts-1)*(1+args.target[0])/2)) 
-j = int(np.floor((args.npts-1)*(1+args.target[1])/2))
+i = int(np.floor((args.npts-1)*(1+args.target[0])/2.0)) 
+j = int(np.floor((args.npts-1)*(1+args.target[1])/2.0))
 
 #Target velocity set to negative
 data[i, j] = -1
@@ -25,4 +26,4 @@ dataset.attrs['Units'] = 'Meters per second'
 
 file.close()
 
-#subprocess.run to run solver and continue in this script the trajectory interpretation
+# TO DO: subprocess.run to run solver and continue in this script the trajectory interpretation
