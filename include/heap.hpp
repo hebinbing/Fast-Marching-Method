@@ -55,23 +55,41 @@ template <typename T>
 void update() {}
 
 template <typename T> 
-void insert(T new_node) {
-    if (data.size() == 0)
-        std::cerr << "Heap is empty." << std::endl;
+void insert(T new_node_value, uint64_t new_node_index) {
+    node new_node;
+
+    new_node.value = new_node_value;
+    new_node.index = new_node_index;
 
     data.push_back(new_node);
 
-    uint64_t new_size = data.size() - 1;
-    up_heap(new_size);
+    up_heap(data.size() - 1);
 }
 
 template <typename T> 
-void pop() {}
+void pop() {
+  if (data.size() == 0)
+        std::cerr << "Heap is empty." << std::endl;
+}
 
 template <typename T> 
-void down_heap() {}
+void down_heap() {
+
+  //find the node with given index
+
+  //for cycle that swaps parent w/ children when node.value is smaller
+      //compare node.value
+
+  //what to return?
+}
 
 template <typename T> 
 void up_heap(uint64_t index) {
+  
+  //find the node with given index
 
+  //for cycle that swaps children w/ parent when node.value is smaller
+      //compare node.value
+
+  //what to return?
 }
