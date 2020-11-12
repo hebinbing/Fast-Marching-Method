@@ -1,82 +1,77 @@
+#include <cmath>
 #include <iostream>
 #include <vector>
-#include <cmath>
 
 namespace fmm {
 
-template <typename T>
-class min_heap {
+template <typename T> class min_heap {
   private:
-    
-    std::vector<T> data;
-
-    //! Update the value of an existing node
+    //! Updates the value of an existing node
     void update();
 
-    int parent_index(int index) { return floor((index-1)/2); }
+    uint64_t parent_index(uint64_t index) { return floor((index - 1) / 2); }
 
-    int left_child_index(int index) { return floor((index+1)/2); }
+    uint64_t left_child_index(uint64_t index) { return floor((index + 1) / 2); }
 
-    int right_child_index(int index) { return floor((index+2)/2); }
+    uint64_t right_child_index(uint64_t index) { return floor((index + 2) / 2); }
 
-    int parent(int index) { return data[parent_index(index)]; }
+    uint64_t parent(uint64_t index) { return data[parent_index(index)]; }
 
-    int left_child(int index) { return data[left_child_index(index)]; }
+    uint64_t left_child(uint64_t index) { return data[left_child_index(index)]; }
 
-    int right_child(int index) { return data[right_child_index(index)]; }
+    uint64_t right_child(uint64_t index) { return data[right_child_index(index)]; }
 
-    void swap (int index_one, int index_two) {
-      T temp = data[index_one];
-      data[index_one] = data[index_two];
-      data[index_two] = temp;
+    struct node{
+      T value;
+      uint64_t index;
     }
+  
+    std::vector<node> data;
 
   public:
-    
-    //! Return the node with smallest value
+    //! Returns the min node value
     T const min_node() {
-      if (data.size() == 0)
-          std::cerr << "Heap is empty." << std::endl;
-      
-      return data[0];      
+        if (data.size() == 0)
+            std::cerr << "Heap is empty." << std::endl;
+
+        return data.value[0];
     }
 
-    //! Insert a node
+    //! Inserts a node
     void insert();
-    
-    //! Remove the node with smallest value
+
+    //! Removes the node with smallest value
     void pop();
-    
-    //! Bubble down a node
+
+    //! Bubbles down a node
     void down_heap();
 
-    //! Bubble up a node
+    //! Bubbles up a node
     void up_heap();
-
 };
 }
 
-template <typename T>
-void update(){
+template <typename T> 
+void update() {}
 
+template <typename T> 
+void insert(T new_node) {
+    if (data.size() == 0)
+        std::cerr << "Heap is empty." << std::endl;
+
+    data.push_back(new_node);
+
+    uint64_t new_size = data.size() - 1;
+    up_heap(new_size);
 }
 
-template <typename T>
-void insert(){
+template <typename T> 
+void pop() {}
 
-}
+template <typename T> 
+void down_heap() {}
 
-template <typename T>
-void pop(){
-
-}
-
-template <typename T>
-void down_heap(){
-
-}
-
-template <typename T>
-void up_heap(){
+template <typename T> 
+void up_heap(uint64_t index) {
 
 }

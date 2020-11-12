@@ -6,6 +6,4 @@ int main(){
     
     std::cout << "TEST FUNCTION!" << std::endl;
 
-    
-
 } 
