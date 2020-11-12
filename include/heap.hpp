@@ -3,10 +3,12 @@
 #include <cmath>
 
 namespace fmm {
+
+template <typename T>
 class min_heap {
   private:
     
-    std::vector<float> data;
+    std::vector<T> data;
 
     //! Update the value of an existing node
     void update();
@@ -24,7 +26,7 @@ class min_heap {
     int right_child(int index) { return data[right_child_index(index)]; }
 
     void swap (int index_one, int index_two) {
-      float temp = data[index_one];
+      T temp = data[index_one];
       data[index_one] = data[index_two];
       data[index_two] = temp;
     }
@@ -32,24 +34,49 @@ class min_heap {
   public:
     
     //! Return the node with smallest value
-    float const min_node() {
+    T const min_node() {
       if (data.size() == 0)
           std::cerr << "Heap is empty." << std::endl;
       
       return data[0];      
     }
 
+    //! Insert a node
+    void insert();
+    
+    //! Remove the node with smallest value
+    void pop();
+    
     //! Bubble down a node
     void down_heap();
 
     //! Bubble up a node
     void up_heap();
 
-    //! Insert a node
-    void insert();
-
-    //! Remove the node with smallest value
-    void pop();
-
 };
+}
+
+template <typename T>
+void update(){
+
+}
+
+template <typename T>
+void insert(){
+
+}
+
+template <typename T>
+void pop(){
+
+}
+
+template <typename T>
+void down_heap(){
+
+}
+
+template <typename T>
+void up_heap(){
+
 }
