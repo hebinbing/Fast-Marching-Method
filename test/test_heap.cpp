@@ -7,7 +7,7 @@ using namespace fmm;
 
 //! Temp debug function
 void debug(char const *msg){
-    std::cout << msg << std::endl;
+    std::cout << msg << "\n" << std::endl;
 }
 
 int main(){
@@ -20,7 +20,7 @@ int main(){
     for(int i = 0; i < 10; i++){
         temp = rand() % 100;
 
-        test.insert(temp,i);
+        test.insert_or_update(temp,i);
     }   
     
     debug("heap example");
