@@ -2,6 +2,7 @@
 #include <cstdlib>
 
 #include "../include/heap.hpp"
+#include "../include/function.hpp"
 
 using namespace fmm;
 

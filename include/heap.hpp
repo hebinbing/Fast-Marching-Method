@@ -1,6 +1,11 @@
+/**
+ * min_heap class is needed to organize and store the TRIAL values
+ * when running the solver.
+ **/
+
+#include <iostream>
 #include <cmath>
 #include <cstdint>
-#include <iostream>
 #include <vector>
 
 namespace fmm {
@@ -8,11 +13,14 @@ namespace fmm {
 template <typename T> 
 class min_heap {
   private:
+    
+    //! Node structure - value = TRIAL nodes arrival time / index = map index
     struct node {
         T value;
         uint64_t index;
     };
 
+    //! Heap nodes data
     std::vector<node> data;
 
     //! Updates the value of an existing node
