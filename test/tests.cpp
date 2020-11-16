@@ -1,8 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "../include/heap.hpp"
-#include "../include/function.hpp"
+#include <solver.hpp>
 
 using namespace fmm;
 
@@ -11,10 +10,7 @@ void debug(char const *msg){
     std::cout << msg << "\n" << std::endl;
 }
 
-int main(){
-    
-    std::cout << "TEST FUNCTION!" << std::endl;
-    
+void test_heap(){
     min_heap<int>test(10);
     int temp;
 
@@ -31,4 +27,12 @@ int main(){
     
     debug("same heap after one pop()");
     test.print();
+}
+
+int main(){
+    
+    std::cout << "TEST FUNCTION!" << std::endl;
+
+    test_heap();
+
 } 
