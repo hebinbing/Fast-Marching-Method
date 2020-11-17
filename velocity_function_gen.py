@@ -19,9 +19,10 @@ i = int(np.floor((args.npts-1)*(1+args.target[0])/2.0))
 j = int(np.floor((args.npts-1)*(1+args.target[1])/2.0))
 
 #Target velocity set to negative
-data[i, j] = -1
+data[i, j] = -1.0
 
-dataset = file.create_dataset('dset', shape=data.shape, dtype=data.dtype, data=data)
+# [TO DO] - Pass data set name as argument of C++ HDF5 read function
+dataset = file.create_dataset('velocities', shape=data.shape, dtype=data.dtype, data=data)
 dataset.attrs['Units'] = 'Meters per second'
 
 file.close()
