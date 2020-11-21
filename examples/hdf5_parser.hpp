@@ -6,5 +6,5 @@
 
 namespace io{
     
-    fmm::function<float> read(std::string const& filename, std::string const& dataset_name);    
+    fmm::function<fmm::data_t> read(std::string const& filename, std::string const& dataset_name);    
 }

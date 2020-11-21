@@ -8,14 +8,16 @@
 #include <vector>
 #include <cstdint>
 
+#include "defs.hpp"
+
 namespace fmm {
 
-template <typename T> 
+template <typename data_t> 
 class function {
   private:
 
     //! Function data
-    std::vector<T> data;
+    std::vector<data_t> data;
 
   public:
 
@@ -29,14 +31,44 @@ class function {
       data.resize(size);
     }
 
-    function(std::vector<float> v, uint64_t dimensions) : dims(dimensions), dim_size(pow(v.size(), 1.0/dimensions)) {
+    function(std::vector<data_t> v, uint64_t dimensions) : dims(dimensions), dim_size(pow(v.size(), 1.0/dimensions)) {
       data = v;
+      find_target_index();
     }
     
-    T operator()(uint64_t row, uint64_t col) const { return data[col + dim_size*row]; }
-    T &operator()(uint64_t row, uint64_t col) { return data[col + dim_size*row]; }
+    void find_target_index();
+
+    void print();
+
+    data_t operator()(uint64_t row, uint64_t col) const { return data[col + dim_size*row]; }
+    data_t &operator()(uint64_t row, uint64_t col) { return data[col + dim_size*row]; }
 
     size_t size() { return data.size(); }
 
 };
+}
+
+template<typename data_t>
+void fmm::function<data_t>::find_target_index(){
+  
+  for(uint64_t i = 0; i < dim_size; i++){
+    for(uint64_t j = 0; j < dim_size; j++){
+      if(data.at(i + dim_size*j) == -1){
+        target_index = j + dim_size * i;
+        std::cout << "target_idex = " << target_index << " | tgt_value = " << data.at(i + dim_size*j) << std::endl; 
+      }
+    }
+  }
+}
+
+template<typename data_t>
+void fmm::function<data_t>::print(){
+  
+  std::cout << "Function Data : Total size = " << size() << " | Number of Dimensions = " << dims << " | Dimension size = " << dim_size << std::endl;
+
+  for(uint64_t i = 0; i < dim_size; i++){
+    for(uint64_t j = 0; j < dim_size; j++){
+        std::cout << "(" << i << "," << j << ") = " << data.at(i+dim_size*j) << std::endl; 
+    }
+  }
 }

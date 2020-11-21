@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <vector>
 
+#include "defs.hpp"
+
 namespace fmm {
 
 template <typename T> 
@@ -55,7 +57,7 @@ class min_heap {
     void up_heap(uint64_t index);
 
     //! Returns data vector size
-    uint64_t size() { return data.size(); }
+    size_t size() { return data.size(); }
 
     //! Debug temp pruint64_t function
     void print();
