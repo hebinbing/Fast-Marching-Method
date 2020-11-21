@@ -7,7 +7,7 @@
 
 namespace io{
 
-    H5::PredType get_ds_type(H5::DataSet ds){
+    H5::PredType get_ds_type() {
         
         if(sizeof(fmm::data_t) == sizeof(int)){
             return H5::PredType::NATIVE_INT;
@@ -32,12 +32,24 @@ namespace io{
         int n_points = dataspace.getSimpleExtentNpoints();
     
         std::vector<fmm::data_t> ds_values(n_points);
-        dataset.read(ds_values.data(), H5::PredType::NATIVE_DOUBLE);
+        dataset.read(ds_values.data(), get_ds_type());
 
         fmm::function<fmm::data_t> f(ds_values, n_dimensions);
 
-        f.print();
-
         return f;        
+    }
+
+    void write(std::string const& file_name, std::string const& dataset_name, fmm::function<fmm::data_t> f){
+
+        // Truncate file, if it already exists, erasing all data previously stored in the file.
+        H5::H5File file(file_name, H5F_ACC_TRUNC);
+
+        std::vector<hsize_t> dims = {f.dim_size, f.dim_size};
+        H5::DataSpace dataspace(f.dims, dims.data());
+
+        H5::DataSet dataset = file.createDataSet(dataset_name, get_ds_type(), dataspace);
+
+        dataset.write(f.data.data(), get_ds_type(), dataspace);
+
     } 
 }

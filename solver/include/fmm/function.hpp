@@ -14,14 +14,14 @@ namespace fmm {
 
 template <typename data_t> 
 class function {
-  private:
+  public:
 
     //! Function data
     std::vector<data_t> data;
 
-  public:
-
+    //! Data (square) matrix dimension
     uint64_t dims;
+    //! Data (square) matrix size dimension
     uint64_t dim_size;
     
     //! Objective index
@@ -53,10 +53,8 @@ void fmm::function<data_t>::find_target_index(){
   
   for(uint64_t i = 0; i < dim_size; i++){
     for(uint64_t j = 0; j < dim_size; j++){
-      if(data.at(i + dim_size*j) == -1){
+      if(data.at(i + dim_size*j) == -1)
         target_index = j + dim_size * i;
-        std::cout << "target_idex = " << target_index << " | tgt_value = " << data.at(i + dim_size*j) << std::endl; 
-      }
     }
   }
 }
