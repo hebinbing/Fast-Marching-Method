@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include <solver.hpp>
+#include <fmm/solver.hpp>
 
 using namespace fmm;
 
