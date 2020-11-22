@@ -1,3 +1,4 @@
-namespace fmm{
+namespace fmm
+{
     using data_t = double;
 }
