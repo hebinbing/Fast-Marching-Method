@@ -19,10 +19,11 @@ int main()
 
     fmm::function<fmm::data_t> value_function = s.solve(cost_function);
 
-    io::write(file_name_w, dataset_name_w, value_function);
+    // io::write(file_name_w, dataset_name_w, value_function);
 
-    value_function = io::read(file_name_w, "value_function");
+    // value_function = io::read(file_name_w, "value_function");
 
     // Debug
-    value_function.print();
+    // cost_function.print();
+    // value_function.print();
 }

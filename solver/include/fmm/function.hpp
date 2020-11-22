@@ -28,6 +28,8 @@ namespace fmm
         //! Objective index
         uint64_t target_index;
 
+        function() {}
+        
         function(uint64_t size, uint64_t dimensions): dims(dimensions), dim_size(pow(size, 1.0 / dimensions))
         {
             data.resize(size);

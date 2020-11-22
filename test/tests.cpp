@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include <fmm/solver.hpp>
+#include "fmm/solver.hpp"
 
 using namespace fmm;
 
@@ -12,6 +12,8 @@ void test_heap()
 {
     min_heap<int> test(10);
     int temp;
+
+    
 
     for(int i = 0; i < 10; i++)
     {
@@ -27,6 +29,11 @@ void test_heap()
 
     debug("same heap after one pop()");
     test.print();
+
+   //----
+
+   gridpoint_t p{ 1, coordinates{1,1}} ;
+   std::cout << p.value <<  " / " << p.map_index.first << "," << p.map_index.second << std::endl;
 }
 
 int main()

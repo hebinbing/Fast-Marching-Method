@@ -16,7 +16,7 @@ namespace fmm
     class min_heap
     {
       private:
-        //! Node structure - value = TRIAL nodes arrival time / index = map
+        //! Node structure - value = node arrival time / index = map
         //! index
         struct node
         {
