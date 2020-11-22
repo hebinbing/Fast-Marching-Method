@@ -20,7 +20,9 @@ namespace fmm
         //! index
         struct node
         {
-            data_t value;
+            //! Value and original map coordinates
+            gridpoint_t node_data;
+            //! Heap data vector index
             uint64_t index;
         };
 
@@ -28,7 +30,7 @@ namespace fmm
         std::vector<node> data;
 
         //! Updates the value of an existing node
-        void update(data_t new_node_value, uint64_t new_node_index);
+        void update(gridpoint_t new_node, uint64_t index);
 
         uint64_t parent(uint64_t index) { return floor((index - 1) / 2); }
 
@@ -44,11 +46,11 @@ namespace fmm
             if(data.size() == 0)
                 std::cerr << "Heap is empty." << std::endl;
 
-            return data.value[0];
+            return data.node_data.value[0];
         }
 
         //! Inserts a node
-        void insert_or_update(data_t new_node_value, uint64_t new_node_index);
+        void insert_or_update(gridpoint_t new_node, uint64_t new_node_index);
 
         //! Removes the node with smallest value
         void pop();
@@ -86,40 +88,40 @@ uint64_t fmm::min_heap<data_t>::min_child(uint64_t index)
     }
     else
     {
-        return (data.at(2 * index + 1).value <= data.at(2 * index + 2).value)
+        return (data.at(2 * index + 1).node_data.value <=
+                data.at(2 * index + 2).node_data.value)
                    ? (2 * index + 1)
                    : (2 * index + 2);
     }
 }
 
 template<typename data_t>
-void fmm::min_heap<data_t>::update(data_t new_node_value, uint64_t index)
+void fmm::min_heap<data_t>::update(gridpoint_t new_node, uint64_t index)
 {
-    data.at(index).value = new_node_value;
+    data.at(index).node_data = new_node;
 
     up_heap(index);
 }
 
 template<typename data_t>
-void fmm::min_heap<data_t>::insert_or_update(data_t new_node_value,
+void fmm::min_heap<data_t>::insert_or_update(gridpoint_t new_node,
                                              uint64_t new_node_index)
 {
-    uint64_t node_index;
-
-    for(auto i : data)
+    uint64_t node_index = 0;
+    
+    for(node_index = 0; node_index < data.size(); node_index++)
     {
-        node_index++;
-
-        if(i.index == new_node_index)
+        if(data.at(node_index).index == new_node_index)
         {
-            if(new_node_value < i.value)
+            if(new_node.value < data.at(node_index).node_data.value)
             {
-                update(new_node_value, node_index);
+                update(new_node, node_index);
             }
+            return;
         }
     }
-
-    data.push_back(node{ new_node_value, new_node_index });
+    std::cout << "insert" << std::endl;
+    data.push_back(node{ new_node, new_node_index});
 
     up_heap(data.size() - 1);
 }
@@ -143,7 +145,8 @@ template<typename data_t>
 void fmm::min_heap<data_t>::down_heap(uint64_t index)
 {
     for(uint64_t child = min_child(index);
-        index < data.size() && data.at(child).value < data.at(index).value;
+        index < data.size() &&
+        data.at(child).node_data.value < data.at(index).node_data.value;
         index = child, child = min_child(index))
     {
         std::swap(data.at(child), data.at(index));
@@ -154,7 +157,8 @@ template<typename data_t>
 void fmm::min_heap<data_t>::up_heap(uint64_t index)
 {
     for(uint64_t par = parent(index);
-        index > 0 && data.at(index).value < data.at(par).value;
+        index > 0 &&
+        data.at(index).node_data.value < data.at(par).node_data.value;
         index = par, par = parent(index))
     {
         std::swap(data.at(index), data.at(par));
@@ -172,7 +176,9 @@ void fmm::min_heap<data_t>::print()
 
     for(auto n = data.begin(); n != data.end(); ++n)
     {
-        std::cout << "(" << n->index << "," << n->value << ") " << std::endl;
+        std::cout << "NODE " << n->index << " : VALUE = " << n->node_data.value
+                  << ", MAP COORDINATES : (" << n->node_data.map_index.first << ","
+                  << n->node_data.map_index.second << ")" << std::endl;
     }
     std::cout << "" << std::endl;
 }

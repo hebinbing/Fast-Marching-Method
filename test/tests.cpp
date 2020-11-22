@@ -11,14 +11,13 @@ void debug(char const* msg) { std::cout << msg << "\n" << std::endl; }
 void test_heap()
 {
     min_heap<int> test(10);
-    int temp;
 
-    
+    gridpoint_t temp;
 
     for(int i = 0; i < 10; i++)
     {
-        temp = rand() % 100;
-
+        temp.value = rand() % 100;
+        temp.map_index = std::pair<int,int> {rand() % 10, rand() % 10};
         test.insert_or_update(temp, i);
     }
 
