@@ -18,15 +18,18 @@ namespace fmm
     {
       public:
         //! Function data
-        std::vector<data_t> data;
+        std::vector<gridpoint_t> data;
 
         //! Data (square) matrix dimension
         uint64_t dims;
         //! Data (square) matrix size dimension
         uint64_t dim_size;
 
-        //! Objective index
+        //! Objective index in data vector
         uint64_t target_index;
+
+        //! Objective coordinates
+        coordinates target_coordinates;
 
         function() {}
         
@@ -37,54 +40,77 @@ namespace fmm
 
         function(std::vector<data_t> v, uint64_t dimensions)
             : dims(dimensions), dim_size(pow(v.size(), 1.0 / dimensions))
-        {
-            data = v;
+        {   
+            for(int row = 0, col = 0, i = 0; i < v.size(); i++, col++){
+
+                if(col==dim_size){
+                    col=0;
+                    row++;
+                }
+
+                data.push_back(gridpoint_t { v.at(i), std::pair<int,int> {row, col} });
+            }
+
             find_target_index();
+        }
+
+        gridpoint_t operator()(int row, int col) const
+        {
+            return get_point(row, col);
+        }
+
+        gridpoint_t& operator()(int row, int col)
+        {
+            return get_point(row, col);
+        }
+
+        void print();
+
+        size_t size() { return data.size(); }
+
+      private:
+
+        gridpoint_t get_point(int row, int col) const{
+            return data.at(col + dim_size * row);
+        }
+
+        gridpoint_t& get_point(int row, int col){
+            return data.at(col + dim_size * row);
         }
 
         void find_target_index();
 
-        void print();
-
-        data_t operator()(uint64_t row, uint64_t col) const
-        {
-            return data[col + dim_size * row];
-        }
-        data_t& operator()(uint64_t row, uint64_t col)
-        {
-            return data[col + dim_size * row];
-        }
-
-        size_t size() { return data.size(); }
     };
+
+    template<typename data_t>
+    void function<data_t>::find_target_index()
+    {
+        for(int i = 0; i < dim_size; i++)
+        {
+            for(int j = 0; j < dim_size; j++)
+            {           
+                if(get_point(i,j).value == -1){
+                    target_index = j + dim_size * i;
+                    target_coordinates = {i, j};
+                }
+            }
+        }
+    }
+
+    template<typename data_t>
+    void function<data_t>::print()
+    {
+        std::cout << "Function Data : Total size = " << size()
+                << " | Number of Dimensions = " << dims
+                << " | Dimension size = " << dim_size << std::endl;
+
+        for(int i = 0; i < dim_size; i++)
+        {
+            for(int j = 0; j < dim_size; j++)
+            {   
+            std::cout << get_point(i,j).value << "|" << get_point(i,j).map_index.first << "," << get_point(i,j).map_index.second << std::endl;
+            }
+        }
+    }
+
 }    // namespace fmm
-
-template<typename data_t>
-void fmm::function<data_t>::find_target_index()
-{
-    for(uint64_t i = 0; i < dim_size; i++)
-    {
-        for(uint64_t j = 0; j < dim_size; j++)
-        {
-            if(data.at(i + dim_size * j) == -1)
-                target_index = j + dim_size * i;
-        }
-    }
-}
-
-template<typename data_t>
-void fmm::function<data_t>::print()
-{
-    std::cout << "Function Data : Total size = " << size()
-              << " | Number of Dimensions = " << dims
-              << " | Dimension size = " << dim_size << std::endl;
-
-    for(uint64_t i = 0; i < dim_size; i++)
-    {
-        for(uint64_t j = 0; j < dim_size; j++)
-        {
-            std::cout << "(" << i << "," << j
-                      << ") = " << data.at(i + dim_size * j) << std::endl;
-        }
-    }
-}
