@@ -4,10 +4,10 @@
  * the data structure where the minimum arrival times data is.
  **/
 
+#include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <vector>
-#include <cmath>
 
 #include "defs.hpp"
 
@@ -32,23 +32,26 @@ namespace fmm
         coordinates target_coordinates;
 
         function() {}
-        
-        function(uint64_t size, uint64_t dimensions): dims(dimensions), dim_size(pow(size, 1.0 / dimensions))
+
+        function(uint64_t size, uint64_t dimensions)
+            : dims(dimensions), dim_size(pow(size, 1.0 / dimensions))
         {
             data.resize(size);
         }
 
         function(std::vector<data_t> v, uint64_t dimensions)
             : dims(dimensions), dim_size(pow(v.size(), 1.0 / dimensions))
-        {   
-            for(int row = 0, col = 0, i = 0; i < v.size(); i++, col++){
-
-                if(col==dim_size){
-                    col=0;
+        {
+            for(int row = 0, col = 0, i = 0; i < v.size(); i++, col++)
+            {
+                if(col == dim_size)
+                {
+                    col = 0;
                     row++;
                 }
 
-                data.push_back(gridpoint_t { v.at(i), std::pair<int,int> {row, col} });
+                data.push_back(
+                    gridpoint_t{ v.at(i), std::pair<int, int>{ row, col } });
             }
 
             find_target_index();
@@ -69,17 +72,17 @@ namespace fmm
         size_t size() { return data.size(); }
 
       private:
-
-        gridpoint_t get_point(int row, int col) const{
+        gridpoint_t get_point(int row, int col) const
+        {
             return data.at(col + dim_size * row);
         }
 
-        gridpoint_t& get_point(int row, int col){
+        gridpoint_t& get_point(int row, int col)
+        {
             return data.at(col + dim_size * row);
         }
 
         void find_target_index();
-
     };
 
     template<typename data_t>
@@ -88,10 +91,11 @@ namespace fmm
         for(int i = 0; i < dim_size; i++)
         {
             for(int j = 0; j < dim_size; j++)
-            {           
-                if(get_point(i,j).value == -1){
+            {
+                if(get_point(i, j).value == -1)
+                {
                     target_index = j + dim_size * i;
-                    target_coordinates = {i, j};
+                    target_coordinates = { i, j };
                 }
             }
         }
@@ -101,14 +105,16 @@ namespace fmm
     void function<data_t>::print()
     {
         std::cout << "Function Data : Total size = " << size()
-                << " | Number of Dimensions = " << dims
-                << " | Dimension size = " << dim_size << std::endl;
+                  << " | Number of Dimensions = " << dims
+                  << " | Dimension size = " << dim_size << std::endl;
 
         for(int i = 0; i < dim_size; i++)
         {
             for(int j = 0; j < dim_size; j++)
-            {   
-            std::cout << get_point(i,j).value << "|" << get_point(i,j).map_index.first << "," << get_point(i,j).map_index.second << std::endl;
+            {
+                std::cout << get_point(i, j).value << "|"
+                          << get_point(i, j).map_index.first << ","
+                          << get_point(i, j).map_index.second << std::endl;
             }
         }
     }

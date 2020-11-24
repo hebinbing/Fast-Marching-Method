@@ -18,7 +18,7 @@ void test_heap()
     {
         temp.value = rand() % 100;
         temp.map_index = std::pair<int,int> {rand() % 10, rand() % 10};
-        test.insert_or_update(temp, i);
+        test.insert_or_update(temp);
     }
 
     debug("heap example");

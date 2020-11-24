@@ -17,18 +17,4 @@ namespace fmm
         coordinates map_index;
     };
 
-    //! Node status enumeration
-    enum tag
-    {
-        FAR,
-        CLOSE,
-        ALIVE
-    };
-
-    //! Solver values data structure
-    struct solver_t
-    {
-        gridpoint_t grid_point;
-        tag status;
-    };
 }    // namespace fmm

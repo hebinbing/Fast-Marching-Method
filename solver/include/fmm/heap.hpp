@@ -29,7 +29,7 @@ namespace fmm
         //! Heap nodes data
         std::vector<node> data;
 
-        //! Updates the value of an existing node
+        //! Updates the value of an existing node (NEEDS CHANGES)
         void update(gridpoint_t new_node, uint64_t index);
 
         uint64_t parent(uint64_t index) { return floor((index - 1) / 2); }
@@ -37,6 +37,9 @@ namespace fmm
         uint64_t min_child(uint64_t index);
 
       public:
+        //! Min_heap empty constructor
+        min_heap() {}
+
         //! Min_heap constructor
         min_heap(uint64_t max_size);
 
@@ -50,7 +53,7 @@ namespace fmm
         }
 
         //! Inserts a node
-        void insert_or_update(gridpoint_t new_node, uint64_t new_node_index);
+        void insert_or_update(gridpoint_t new_node);
 
         //! Removes the node with smallest value
         void pop();
@@ -104,14 +107,13 @@ void fmm::min_heap<data_t>::update(gridpoint_t new_node, uint64_t index)
 }
 
 template<typename data_t>
-void fmm::min_heap<data_t>::insert_or_update(gridpoint_t new_node,
-                                             uint64_t new_node_index)
+void fmm::min_heap<data_t>::insert_or_update(gridpoint_t new_node)
 {
     uint64_t node_index = 0;
-    
+
     for(node_index = 0; node_index < data.size(); node_index++)
     {
-        if(data.at(node_index).index == new_node_index)
+        if(data.at(node_index).node_data.map_index == new_node.map_index)
         {
             if(new_node.value < data.at(node_index).node_data.value)
             {
@@ -120,8 +122,8 @@ void fmm::min_heap<data_t>::insert_or_update(gridpoint_t new_node,
             return;
         }
     }
-    std::cout << "insert" << std::endl;
-    data.push_back(node{ new_node, new_node_index});
+
+    data.push_back(node{ new_node, node_index });
 
     up_heap(data.size() - 1);
 }
@@ -177,8 +179,8 @@ void fmm::min_heap<data_t>::print()
     for(auto n = data.begin(); n != data.end(); ++n)
     {
         std::cout << "NODE " << n->index << " : VALUE = " << n->node_data.value
-                  << ", MAP COORDINATES : (" << n->node_data.map_index.first << ","
-                  << n->node_data.map_index.second << ")" << std::endl;
+                  << ", MAP COORDINATES : (" << n->node_data.map_index.first
+                  << "," << n->node_data.map_index.second << ")" << std::endl;
     }
     std::cout << "" << std::endl;
 }
