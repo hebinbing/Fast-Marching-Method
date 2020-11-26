@@ -1,4 +1,6 @@
-#include <utility>
+#include <array>
+
+#define DIM 2 
 
 #pragma once
 
@@ -7,14 +9,10 @@ namespace fmm
     //! Cost & value function data type
     using data_t = double;
 
-    //! Map coordinates pair (x,y)
-    using coordinates = std::pair<int, int>;
+    //! Coordinates index type 
+    using index_t = std::size_t;
 
-    //! Grid point data structure
-    struct gridpoint_t
-    {
-        data_t value;
-        coordinates map_index;
-    };
+    //! Map coordinates
+    using point_t = std::array<index_t, DIM>;
 
 }    // namespace fmm

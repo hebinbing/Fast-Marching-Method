@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "hdf5_parser.hpp"
+#include "fmm/defs.hpp"
 
 namespace io
 {
@@ -40,7 +41,7 @@ namespace io
         std::vector<fmm::data_t> ds_values(n_points);
         dataset.read(ds_values.data(), get_ds_type());
 
-        fmm::function<fmm::data_t> f(ds_values, n_dimensions);
+        fmm::function<fmm::data_t> f(ds_values);
 
         return f;
     }
@@ -53,12 +54,14 @@ namespace io
         // stored in the file.
         H5::H5File file(file_name, H5F_ACC_TRUNC);
 
-        std::vector<hsize_t> dims = { f.dim_size, f.dim_size };
-        H5::DataSpace dataspace(f.dims, dims.data());
+        std::vector<hsize_t> dims = { f.dimension_size(), f.dimension_size() };
+        H5::DataSpace dataspace(DIM, dims.data());
 
         H5::DataSet dataset =
             file.createDataSet(dataset_name, get_ds_type(), dataspace);
 
-        dataset.write(f.data.data(), get_ds_type(), dataspace);
+        auto data_ref = f.get_data();
+
+        dataset.write(data_ref, get_ds_type(), dataspace);
     }
 }    // namespace io

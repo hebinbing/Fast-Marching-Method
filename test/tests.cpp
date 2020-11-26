@@ -10,15 +10,13 @@ void debug(char const* msg) { std::cout << msg << "\n" << std::endl; }
 
 void test_heap()
 {
-    min_heap<int> test(10);
-
-    gridpoint_t temp;
+    min_heap<data_t> test(10);
 
     for(int i = 0; i < 10; i++)
     {
-        temp.value = rand() % 100;
-        temp.map_index = std::pair<int,int> {rand() % 10, rand() % 10};
-        test.insert_or_update(temp);
+        data_t temp_value = rand() % 100;
+        index_t temp_index = i;
+        test.insert_or_update(temp_value, temp_index);
     }
 
     debug("heap example");
@@ -28,11 +26,6 @@ void test_heap()
 
     debug("same heap after one pop()");
     test.print();
-
-   //----
-
-   gridpoint_t p{ 1, coordinates{1,1}} ;
-   std::cout << p.value <<  " / " << p.map_index.first << "," << p.map_index.second << std::endl;
 }
 
 int main()

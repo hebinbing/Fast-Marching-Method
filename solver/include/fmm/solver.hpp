@@ -10,35 +10,42 @@ namespace fmm
     template<typename data_t>
     class solver
     {
+
+      public:
+        //! Constructior. Moves previously allocated f, allocating it to
+        //! solution
+        solver(function<data_t> f) : solution(std::move(f)) {
+            find_target();
+        }
+
+        //! Solver algorithm. Returns solution
+        function<data_t> solve();
+          
       private:
         function<data_t> solution;
 
         min_heap<data_t> narrow_band;
 
-        data_t eikonal(gridpoint_t gridpoint);
+        point_t target;
+
+        void find_target();
+
+        data_t eikonal(point_t gridpoint);
 
         void initialize();
 
-        std::vector<coordinates> get_neighbors(coordinates c);
+        std::vector<point_t> get_neighbors(point_t c);
 
-        bool neighbor_exists(coordinates c)
+        bool neighbor_exists(point_t c)
         {
-            if(c.first < 0 || c.second < 0 || c.first > solution.dim_size - 1 ||
-               c.second > solution.dim_size - 1)
+            if(c[0] < 0 || c[1] < 0 || c[0] > solution.dimension_size() - 1 ||
+               c[1] > solution.dimension_size() - 1)
             {
                 return 0;
             }
 
             return 1;
         }
-
-      public:
-        //! Constructior. Moves previously allocated f, allocating it to
-        //! solution
-        solver(function<data_t> f) : solution(std::move(f)) {}
-
-        //! Solver algorithm. Returns solution
-        function<data_t> solve();
     };
 
     template<typename data_t>
@@ -50,38 +57,55 @@ namespace fmm
     }
 
     template<typename data_t>
-    void solver<data_t>::initialize()
+    void solver<data_t>::find_target()
     {
-        std::vector<coordinates> neighbors =
-            get_neighbors(solution.target_coordinates);
-
-        for(int i = 0; i < neighbors.size(); i++)
+        for(int i = 0; i < solution.dimension_size(); i++)
         {
-            narrow_band.insert_or_update(
-                solution(neighbors.at(i).first, neighbors.at(i).second));
-        };
+            for(int j = 0; j < solution.dimension_size(); j++)
+            {   
+                if(solution(i, j) == -1)
+                {
+                    target[0] = i;
+                    target[1] = j;
+                }
+            }
+        }
     }
 
     template<typename data_t>
-    std::vector<coordinates> solver<data_t>::get_neighbors(coordinates c)
+    void solver<data_t>::initialize()
     {
-        std::vector<coordinates> neighbors;
+        std::vector<point_t> neighbors =
+            get_neighbors(target);
+
+        for(auto i : neighbors)
+        {   
+            // WIP - insert first neighbors
+            // narrow_band.insert_or_update(
+                // solution(neighbors.at(i)[0], neighbors.at(i)[1]));
+        }
+    }
+
+    template<typename data_t>
+    std::vector<point_t> solver<data_t>::get_neighbors(point_t c)
+    {
+        std::vector<point_t> neighbors;
 
         for(int i = -1, j = 0; i < 2; i += 2)
         {
-            coordinates temp_c{ i + c.first, j + c.second };
-            if(neighbor_exists(temp_c))
+            point_t p{ i + c[0], j + c[1]};
+            if(neighbor_exists(p))
             {
-                neighbors.push_back(temp_c);
+                neighbors.push_back(p);
             }
         }
 
         for(int j = -1, i = 0; j < 2; j += 2)
         {
-            coordinates temp_c{ i + c.first, j + c.second };
-            if(neighbor_exists(temp_c))
+            point_t p{ i + c[0], j + c[1]};
+            if(neighbor_exists(p))
             {
-                neighbors.push_back(temp_c);
+                neighbors.push_back(p);
             }
         }
 

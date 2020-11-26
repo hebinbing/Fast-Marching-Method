@@ -15,172 +15,173 @@ namespace fmm
     template<typename data_t>
     class min_heap
     {
+      public:
+        //! Min_heap empty constructor
+        min_heap() {}
+
+        //! Min_heap constructor
+        min_heap(size_t max_size);
+
+        //! Returns the min node value
+        data_t const min_node()
+        {
+            if(size() == 0)
+                std::cerr << "Heap is empty." << std::endl;
+
+            return data.at(0).value;
+        }
+
+        //! Inserts a node
+        void insert_or_update(data_t new_node_value, index_t new_node_index);
+
+        //! Removes the node with smallest value
+        void pop();
+
+        //! Bubbles down a node
+        void down_heap(int index);
+
+        //! Bubbles up a node
+        void up_heap(int index);
+
+        //! Returns data vector size
+        size_t size() { return data.size(); }
+
+        //! Delete this temp function when finished
+        void print();
+      
       private:
         //! Node structure - value = node arrival time / index = map
         //! index
         struct node
         {
             //! Value and original map coordinates
-            gridpoint_t node_data;
+            data_t value;
             //! Heap data vector index
-            uint64_t index;
+            index_t index;
         };
 
         //! Heap nodes data
         std::vector<node> data;
 
-        //! Updates the value of an existing node (NEEDS CHANGES)
-        void update(gridpoint_t new_node, uint64_t index);
+        //! Heap nodes map indexes
+        std::vector<point_t> indexes;
 
-        uint64_t parent(uint64_t index) { return floor((index - 1) / 2); }
+        //! Updates the value of an existing node
+        void update(data_t new_value, index_t index);
 
-        uint64_t min_child(uint64_t index);
+        int parent(int index) { return floor((index - 1) / 2); }
 
-      public:
-        //! Min_heap empty constructor
-        min_heap() {}
+        int min_child(int index);
+    };
 
-        //! Min_heap constructor
-        min_heap(uint64_t max_size);
+    template<typename data_t>
+    min_heap<data_t>::min_heap(size_t max_size)
+    {
+        data.reserve(max_size);
+    }
 
-        //! Returns the min node value
-        data_t const min_node()
+    template<typename data_t>
+    int min_heap<data_t>::min_child(int index)
+    {
+        if(data.size() <= 2 * index + 1)
         {
-            if(data.size() == 0)
-                std::cerr << "Heap is empty." << std::endl;
+            return index;
+        }
+        else if(data.size() - 1 == 2 * index + 1)
+        {
+            return 2 * index + 1;
+        }
+        else
+        {
+            return (data.at(2 * index + 1).value <=
+                    data.at(2 * index + 2).value)
+                    ? (2 * index + 1)
+                    : (2 * index + 2);
+        }
+    }
 
-            return data.node_data.value[0];
+    template<typename data_t>
+    void min_heap<data_t>::update(data_t new_value, index_t index)
+    {
+        data.at(index).value = new_value;
+
+        up_heap(index);
+    }
+
+    template<typename data_t>
+    void min_heap<data_t>::insert_or_update(data_t new_node_value, index_t new_node_index)
+    {
+        int node_index = 0;
+
+        for(node_index = 0; node_index < data.size(); node_index++)
+        {
+            if(data.at(node_index).index == new_node_index)
+            {
+                if(new_node_value < data.at(node_index).value)
+                {
+                    update(new_node_value, node_index);
+                }
+                return;
+            }
         }
 
-        //! Inserts a node
-        void insert_or_update(gridpoint_t new_node);
+        data.push_back(node{ new_node_value, new_node_index });
 
-        //! Removes the node with smallest value
-        void pop();
-
-        //! Bubbles down a node
-        void down_heap(uint64_t index);
-
-        //! Bubbles up a node
-        void up_heap(uint64_t index);
-
-        //! Returns data vector size
-        size_t size() { return data.size(); }
-
-        //! Debug temp pruint64_t function
-        void print();
-    };
-}    // namespace fmm
-
-template<typename data_t>
-fmm::min_heap<data_t>::min_heap(uint64_t max_size)
-{
-    data.reserve(max_size);
-}
-
-template<typename data_t>
-uint64_t fmm::min_heap<data_t>::min_child(uint64_t index)
-{
-    if(data.size() <= 2 * index + 1)
-    {
-        return index;
+        up_heap(data.size() - 1);
     }
-    else if(data.size() - 1 == 2 * index + 1)
+
+    template<typename data_t>
+    void min_heap<data_t>::pop()
     {
-        return 2 * index + 1;
-    }
-    else
-    {
-        return (data.at(2 * index + 1).node_data.value <=
-                data.at(2 * index + 2).node_data.value)
-                   ? (2 * index + 1)
-                   : (2 * index + 2);
-    }
-}
-
-template<typename data_t>
-void fmm::min_heap<data_t>::update(gridpoint_t new_node, uint64_t index)
-{
-    data.at(index).node_data = new_node;
-
-    up_heap(index);
-}
-
-template<typename data_t>
-void fmm::min_heap<data_t>::insert_or_update(gridpoint_t new_node)
-{
-    uint64_t node_index = 0;
-
-    for(node_index = 0; node_index < data.size(); node_index++)
-    {
-        if(data.at(node_index).node_data.map_index == new_node.map_index)
+        if(data.size() == 0)
         {
-            if(new_node.value < data.at(node_index).node_data.value)
-            {
-                update(new_node, node_index);
-            }
+            std::cerr << "Heap is empty." << std::endl;
             return;
         }
+
+        std::swap(data.at(0), data.at(data.size() - 1));
+        data.pop_back();
+
+        down_heap(0);
     }
 
-    data.push_back(node{ new_node, node_index });
-
-    up_heap(data.size() - 1);
-}
-
-template<typename data_t>
-void fmm::min_heap<data_t>::pop()
-{
-    if(data.size() == 0)
+    template<typename data_t>
+    void min_heap<data_t>::down_heap(int index)
     {
-        std::cerr << "Heap is empty." << std::endl;
-        return;
+        for(uint64_t child = min_child(index);
+            index < data.size() &&
+            data.at(child).value < data.at(index).value;
+            index = child, child = min_child(index))
+        {
+            std::swap(data.at(child), data.at(index));
+        }
     }
 
-    std::swap(data.at(0), data.at(data.size() - 1));
-    data.pop_back();
-
-    down_heap(0);
-}
-
-template<typename data_t>
-void fmm::min_heap<data_t>::down_heap(uint64_t index)
-{
-    for(uint64_t child = min_child(index);
-        index < data.size() &&
-        data.at(child).node_data.value < data.at(index).node_data.value;
-        index = child, child = min_child(index))
+    template<typename data_t>
+    void min_heap<data_t>::up_heap(int index)
     {
-        std::swap(data.at(child), data.at(index));
-    }
-}
-
-template<typename data_t>
-void fmm::min_heap<data_t>::up_heap(uint64_t index)
-{
-    for(uint64_t par = parent(index);
-        index > 0 &&
-        data.at(index).node_data.value < data.at(par).node_data.value;
-        index = par, par = parent(index))
-    {
-        std::swap(data.at(index), data.at(par));
-    }
-}
-
-template<typename data_t>
-void fmm::min_heap<data_t>::print()
-{
-    if(data.size() == 0)
-    {
-        std::cerr << "Heap is empty." << std::endl;
-        return;
+        for(uint64_t par = parent(index);
+            index > 0 &&
+            data.at(index).value < data.at(par).value;
+            index = par, par = parent(index))
+        {
+            std::swap(data.at(index), data.at(par));
+        }
     }
 
-    for(auto n = data.begin(); n != data.end(); ++n)
+    template<typename data_t>
+    void min_heap<data_t>::print()
     {
-        std::cout << "NODE " << n->index << " : VALUE = " << n->node_data.value
-                  << ", MAP COORDINATES : (" << n->node_data.map_index.first
-                  << "," << n->node_data.map_index.second << ")" << std::endl;
+        if(data.size() == 0)
+        {
+            std::cerr << "Heap is empty." << std::endl;
+            return;
+        }
+
+        for(auto n = data.begin(); n != data.end(); ++n)
+        {
+            std::cout << "NODE " << n->index << " : VALUE = " << n->value << std::endl;
+        }
+        std::cout << "" << std::endl;
     }
-    std::cout << "" << std::endl;
-}
+}    // namespace fmm
