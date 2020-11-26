@@ -50,7 +50,6 @@ namespace fmm
         void print();
 
       private:
-
         //! Heap alues
         std::vector<data_t> data;
 
@@ -85,8 +84,7 @@ namespace fmm
         }
         else
         {
-            return (data.at(2 * index + 1) <=
-                    data.at(2 * index + 2))
+            return (data.at(2 * index + 1) <= data.at(2 * index + 2))
                        ? (2 * index + 1)
                        : (2 * index + 2);
         }
@@ -96,7 +94,7 @@ namespace fmm
     void min_heap<data_t>::update(data_t new_value, index_t index)
     {
         data.at(index) = new_value;
-        
+
         up_heap(index);
     }
 
@@ -107,10 +105,10 @@ namespace fmm
         index_t node_index = 0;
 
         for(node_index = 0; node_index < data.size(); node_index++)
-        {   
+        {
             if(indexes.at(node_index)[0] == map_index[0] &&
                indexes.at(node_index)[1] == map_index[1])
-            {      
+            {
                 if(new_node_value < data.at(node_index))
                 {
                     update(new_node_value, node_index);
@@ -145,7 +143,7 @@ namespace fmm
 
     template<typename data_t>
     void min_heap<data_t>::down_heap(int index)
-    {        
+    {
         for(uint64_t child = min_child(index);
             index < data.size() && data.at(child) < data.at(index);
             index = child, child = min_child(index))
@@ -153,8 +151,6 @@ namespace fmm
             std::swap(data.at(child), data.at(index));
             std::swap(indexes.at(child), indexes.at(index));
         }
-
-
     }
 
     template<typename data_t>

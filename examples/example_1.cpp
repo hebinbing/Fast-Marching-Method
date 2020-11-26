@@ -21,7 +21,8 @@ int main()
 
     io::write(file_name_w, dataset_name_w, value_function);
 
-    // fmm::function<fmm::data_t> value_function = io::read(file_name_w, dataset_name_w);
+    // fmm::function<fmm::data_t> value_function = io::read(file_name_w,
+    // dataset_name_w);
 
     // Debug
     cost_function.print();

@@ -70,16 +70,20 @@ namespace fmm
     }
 
     template<typename data_t>
+    data_t solver<data_t>::eikonal(point_t gridpoint)
+    {}
+
+    template<typename data_t>
     void solver<data_t>::initialize()
     {
         std::vector<point_t> neighbors = get_neighbors(target);
 
         for(auto i : neighbors)
         {
-            // WIP - insert first neighbors
-            // narrow_band.insert_or_update(
-            // solution(neighbors.at(i)[0], neighbors.at(i)[1]));
+            narrow_band.insert_or_update(solution(i[0], i[1]), i);
         }
+
+        narrow_band.print();
     }
 
     template<typename data_t>

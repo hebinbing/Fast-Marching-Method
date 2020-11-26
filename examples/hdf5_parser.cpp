@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "hdf5_parser.hpp"
 #include "fmm/defs.hpp"
+#include "hdf5_parser.hpp"
 
 namespace io
 {
