@@ -26,15 +26,15 @@ namespace fmm
         function() {}
 
         function(int npts)
-        {   
-            dim_size = pow(npts, (1.0/DIM));
-            
+        {
+            dim_size = pow(npts, (1.0 / DIM));
+
             data.resize(npts);
         }
 
         function(std::vector<data_t> v)
         {
-            dim_size = pow(v.size(), 1.0/DIM);
+            dim_size = pow(v.size(), 1.0 / DIM);
             data = v;
         }
 
@@ -48,10 +48,7 @@ namespace fmm
             return data.at(col + dim_size * row);
         }
 
-        data_t* get_data()
-        {
-            return data.data();
-        }
+        data_t* get_data() { return data.data(); }
 
         //! Delete this temp function when finished
         void print();
@@ -66,7 +63,6 @@ namespace fmm
 
         //! Data (square) matrix size dimension
         size_t dim_size;
-
     };
 
     template<typename data_t>
@@ -78,7 +74,7 @@ namespace fmm
 
         for(int i = 0; i < size(); i++)
         {
-                std::cout << data.at(i) << std::endl;
+            std::cout << data.at(i) << std::endl;
         }
     }
 

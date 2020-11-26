@@ -1,6 +1,7 @@
 #include <array>
+#include <utility>
 
-#define DIM 2 
+#define DIM 2
 
 #pragma once
 
@@ -9,7 +10,7 @@ namespace fmm
     //! Cost & value function data type
     using data_t = double;
 
-    //! Coordinates index type 
+    //! Coordinates index type
     using index_t = std::size_t;
 
     //! Map coordinates

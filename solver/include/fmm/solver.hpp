@@ -10,17 +10,14 @@ namespace fmm
     template<typename data_t>
     class solver
     {
-
       public:
         //! Constructior. Moves previously allocated f, allocating it to
         //! solution
-        solver(function<data_t> f) : solution(std::move(f)) {
-            find_target();
-        }
+        solver(function<data_t> f) : solution(std::move(f)) { find_target(); }
 
         //! Solver algorithm. Returns solution
         function<data_t> solve();
-          
+
       private:
         function<data_t> solution;
 
@@ -62,7 +59,7 @@ namespace fmm
         for(int i = 0; i < solution.dimension_size(); i++)
         {
             for(int j = 0; j < solution.dimension_size(); j++)
-            {   
+            {
                 if(solution(i, j) == -1)
                 {
                     target[0] = i;
@@ -75,14 +72,13 @@ namespace fmm
     template<typename data_t>
     void solver<data_t>::initialize()
     {
-        std::vector<point_t> neighbors =
-            get_neighbors(target);
+        std::vector<point_t> neighbors = get_neighbors(target);
 
         for(auto i : neighbors)
-        {   
+        {
             // WIP - insert first neighbors
             // narrow_band.insert_or_update(
-                // solution(neighbors.at(i)[0], neighbors.at(i)[1]));
+            // solution(neighbors.at(i)[0], neighbors.at(i)[1]));
         }
     }
 
@@ -93,7 +89,7 @@ namespace fmm
 
         for(int i = -1, j = 0; i < 2; i += 2)
         {
-            point_t p{ i + c[0], j + c[1]};
+            point_t p{ i + c[0], j + c[1] };
             if(neighbor_exists(p))
             {
                 neighbors.push_back(p);
@@ -102,7 +98,7 @@ namespace fmm
 
         for(int j = -1, i = 0; j < 2; j += 2)
         {
-            point_t p{ i + c[0], j + c[1]};
+            point_t p{ i + c[0], j + c[1] };
             if(neighbor_exists(p))
             {
                 neighbors.push_back(p);

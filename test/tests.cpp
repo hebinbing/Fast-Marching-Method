@@ -12,11 +12,12 @@ void test_heap()
 {
     min_heap<data_t> test(10);
 
-    for(int i = 0; i < 10; i++)
+    for(index_t x = 0, i = 0; i < 10; i++, x++)
     {
         data_t temp_value = rand() % 100;
-        index_t temp_index = i;
-        test.insert_or_update(temp_value, temp_index);
+        point_t temp_map_index = {x, x};
+        if(x == 5) x--;
+        test.insert_or_update(temp_value, temp_map_index);
     }
 
     debug("heap example");
