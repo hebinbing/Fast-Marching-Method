@@ -17,7 +17,7 @@ int main()
 
     fmm::solver_t s(cost_function);
 
-    // fmm::function<fmm::data_t> value_function = s.solve();
+    fmm::function<fmm::data_t> value_function = s.solve();
 
     // io::write(file_name_w, dataset_name_w, value_function);
 

@@ -9,12 +9,10 @@ namespace fmm
       public:
 
         solver_t(function<data_t> f)
-            : cost_function(f),
+            : cost_function(std::move(f)),
               value_function(f.size(), std::numeric_limits<int>::max()),
               narrow_band() 
-        {
-            find_target();
-        }
+        {}
 
         //! Solver algorithm. Returns solution
         function<data_t> solve();
@@ -26,12 +24,9 @@ namespace fmm
         
         point_t target;
 
-        void find_target();
+        bool find_target();
 
         void initialize();
-
-        //WIP
-        bool neighbor_exists(point_t c);
 
         //WIP
         std::vector<point_t> get_neighbors(point_t c);
