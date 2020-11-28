@@ -1,68 +1,69 @@
-/**
- * function class is the data structure of cost and value functions. Cost
- * function is the data structure where the velocity data is. Value function is
- * the data structure where the minimum arrival times data is.
- **/
-
-#include <cmath>
-#include <cstdint>
-#include <iostream>
-#include <vector>
-
 #include "defs.hpp"
 
 namespace fmm
 {
-    template<typename data_t>
+    template<typename T>
     class function
     {
       public:
-        // //! Objective index in data vector
-        // uint64_t target_index;
-
-        // //! Objective coordinates
-        // coordinates target_coordinates;
-
+        //! Empty constructor
         function() {}
 
-        function(int npts)
+        //! Square domain constructor
+        function(size_t max_size)
         {
-            dim_size = pow(npts, (1.0 / DIM));
+            for(int i = 0; i < DIM; i++)
+                dim_size[i] = pow(max_size, (1.0 / DIM));
 
-            data.resize(npts);
+            data.reserve(max_size);
         }
 
-        function(std::vector<data_t> v)
+        //! Square domain constructor w/ initial value
+        function(size_t max_size, T initial_value)
         {
-            dim_size = pow(v.size(), 1.0 / DIM);
+            for(int i = 0; i < DIM; i++)
+                dim_size[i] = pow(max_size, (1.0 / DIM));
+
+            data = std::vector<T>(max_size, initial_value);
+        }
+
+        //! Square domain constructor w/ initial values
+        function(std::vector<double> v)
+        {
+            for(int i = 0; i < DIM; i++)
+                dim_size[i] = pow(v.size(), (1.0 / DIM));
             data = v;
         }
 
-        data_t operator()(int row, int col) const
+        //! Value at given coordinates, through row-major-order index
+        T operator()(int row, int col) const
         {
-            return data.at(col + dim_size * row);
+            return data.at(col + dim_size[0] * row);
         }
 
-        data_t& operator()(int row, int col)
+        //! Reference to value at given coordinates, through row-major-order
+        //! index
+        T& operator()(int row, int col)
         {
-            return data.at(col + dim_size * row);
+            return data.at(col + dim_size[0] * row);
         }
 
-        data_t* get_data() { return data.data(); }
+        T* get_data() { return data.data(); }
+
+        size_t size() { return data.size(); }
+
+        //! Dimensions size
+        std::array<index_t, DIM> dim_size;
 
         //! Delete this temp function when finished
         void print();
 
-        size_t size() { return data.size(); }
-
-        size_t dimension_size() { return dim_size; }
-
       private:
         //! Function data
-        std::vector<data_t> data;
+        std::vector<T> data;
 
         //! Data (square) matrix size dimension
-        size_t dim_size;
+        // size_t dim_size;
     };
 
     template<typename data_t>
@@ -70,7 +71,8 @@ namespace fmm
     {
         std::cout << "Function Data : Total size = " << size()
                   << " | Number of Dimensions = " << DIM
-                  << " | Dimension size = " << dim_size << std::endl;
+                  << " | Dimensions = " << dim_size[0] << "x" << dim_size[1]
+                  << std::endl;
 
         for(int i = 0; i < size(); i++)
         {

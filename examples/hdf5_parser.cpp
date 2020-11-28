@@ -10,11 +10,7 @@ namespace io
 {
     H5::PredType get_ds_type()
     {
-        if(sizeof(fmm::data_t) == sizeof(int))
-        {
-            return H5::PredType::NATIVE_INT;
-        }
-        else if(sizeof(fmm::data_t) == sizeof(float))
+        if(sizeof(fmm::data_t) == sizeof(float))
         {
             return H5::PredType::NATIVE_FLOAT;
         }
@@ -54,7 +50,7 @@ namespace io
         // stored in the file.
         H5::H5File file(file_name, H5F_ACC_TRUNC);
 
-        std::vector<hsize_t> dims = { f.dimension_size(), f.dimension_size() };
+        std::vector<hsize_t> dims = { f.dim_size[0], f.dim_size[1] };
         H5::DataSpace dataspace(DIM, dims.data());
 
         H5::DataSet dataset =

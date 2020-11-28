@@ -10,7 +10,7 @@ if(HDF5_FOUND)
     set_property(TARGET hdf5_parser PROPERTY CXX_STANDARD 11)
 
     add_executable(example_1 example_1.cpp)
-    target_link_libraries(example_1 PRIVATE fmm hdf5_parser)
+    target_link_libraries(example_1 PRIVATE hdf5_parser)
     set_property(TARGET example_1 PROPERTY CXX_STANDARD 11)
     
 endif()

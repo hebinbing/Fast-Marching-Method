@@ -1,5 +1,10 @@
 #include <array>
 #include <utility>
+#include <vector>
+#include <cstdint>
+#include <limits>
+#include <cmath>
+#include <iostream>
 
 #define DIM 2
 

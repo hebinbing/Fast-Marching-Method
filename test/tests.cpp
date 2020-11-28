@@ -16,8 +16,6 @@ void test_heap()
     {
         data_t temp_value = rand() % 100;
         point_t temp_map_index = { x, x };
-        if(x == 5)
-            x--;
         test.insert_or_update(temp_value, temp_map_index);
     }
 
