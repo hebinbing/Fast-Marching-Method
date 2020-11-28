@@ -4,8 +4,6 @@
 
 int main()
 {
-    // Temporary strings - in the future, will pass them as main arguments (to
-    // be inserted by python script)
     char const* file_name_r = "../data/velocity_data.h5";
     char const* dataset_name_r = "velocities";
 
@@ -19,12 +17,9 @@ int main()
 
     fmm::function<fmm::data_t> value_function = s.solve();
 
-    // io::write(file_name_w, dataset_name_w, value_function);
-
-    // fmm::function<fmm::data_t> value_function = io::read(file_name_w,
-    // dataset_name_w);
+    io::write(file_name_w, dataset_name_w, value_function);
 
     // Debug
-    cost_function.print();
-    // value_function.print();
+    // cost_function.print_row_major();
+    // value_function.print_row_major();
 }

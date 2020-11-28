@@ -125,7 +125,7 @@ namespace fmm
     template<typename T>
     void min_heap<T>::pop()
     {
-        if(data.size() == 0)
+        if(size() == 0)
         {
             std::cerr << "Heap is empty." << std::endl;
             return;
@@ -175,8 +175,8 @@ namespace fmm
 
         for(size_t index = 0; index < data.size(); index++)
         {
-            std::cout << "Node = " << data.at(index)
-                      << " : Coordinates = " << coordinates.at(index)[0] << "|"
+            std::cout << "Node = " << index << " | Value = " << data.at(index)
+                      << " | Coordinates = " << coordinates.at(index)[0] << "|"
                       << coordinates.at(index)[1] << std::endl;
         }
         std::cout << "" << std::endl;

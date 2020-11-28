@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "defs.hpp"
 
 namespace fmm
@@ -58,12 +60,13 @@ namespace fmm
         //! Delete this temp function when finished
         void print();
 
+        //! Delete this temp function when finished
+        void print_row_major();
+
       private:
         //! Function data
         std::vector<T> data;
-
-        //! Data (square) matrix size dimension
-        // size_t dim_size;
+        
     };
 
     template<typename data_t>
@@ -77,6 +80,25 @@ namespace fmm
         for(int i = 0; i < size(); i++)
         {
             std::cout << data.at(i) << std::endl;
+        }
+    }
+
+    template<typename data_t>
+    void function<data_t>::print_row_major()
+    {
+        std::cout << "Function Data : Total size = " << size()
+                  << " | Number of Dimensions = " << DIM
+                  << " | Dimensions = " << dim_size[0] << "x" << dim_size[1]
+                  << std::endl;
+
+        for(int i = 0; i < dim_size[0]; i++)
+        {   
+            for(int j = 0; j < dim_size[1]; j++){
+                
+                printf("%.3f ", data.at(j + dim_size[0]*i));
+            }
+
+            std::cout << std::endl;
         }
     }
 
