@@ -1,4 +1,4 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python3
 
 import h5py as h5
 import numpy as np
@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--npts', type=int, default=201, help='Number of grid points per dimension')
-parser.add_argument('--target', type=float, nargs=2, default=[0.0, 0.0], help='Target coordinates')
+parser.add_argument('--target', type=float, nargs=2, default=[0.0, 0.0], help='Target coordinates in a domain with [-1,-1]x[1,1] as vertices')
 parser.add_argument('--no_plot', action='store_true', help='Don\'t plot the result.')
 args = parser.parse_args()
 
