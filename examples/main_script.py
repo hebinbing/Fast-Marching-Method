@@ -36,9 +36,13 @@ file = h5.File('../data/value_function.h5', "r")
 data = file['value_function'][()]
 file.close()
 
+print(data)
+
 t = np.linspace(-1, 1, data.shape[0])
 x, y = np.meshgrid(t, t, indexing='ij')
 z = np.sqrt((x - args.target[0])**2 + (y - args.target[1])**2)
+
+print(z)
 
 print('Maximum error:', np.amax(np.abs(z - data)))
 

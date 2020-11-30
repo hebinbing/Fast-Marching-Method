@@ -97,6 +97,8 @@ namespace fmm
 
         std::vector<point_t> neighbors = get_neighbors(trial);
 
+        std::cout << "Trial = " << "(" << trial[0] << "," << trial[1] << ") - (" << value_function(trial[0], trial[1]) << ")" << std::endl;
+
         for(auto i : neighbors)
         {
             // ALIVE points do not get updated
@@ -104,7 +106,7 @@ namespace fmm
             {
                 auto old_val = value_function(i[0], i[1]);
                 auto new_val = update_value(i);
-
+                std::cout << "Neighbor = " << "(" << i[0] << "," << i[1] << ") | old_val = " << old_val << " | new_val = " << new_val << std::endl;
                 if(new_val < old_val)
                 {   
                     value_function(i[0], i[1]) = new_val;
