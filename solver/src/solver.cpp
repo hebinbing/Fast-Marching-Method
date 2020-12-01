@@ -23,8 +23,8 @@ namespace fmm
     }
 
     function<data_t> solver_t::solve()
-    {   
-        auto start = std::chrono::high_resolution_clock::now(); 
+    {
+        auto start = std::chrono::high_resolution_clock::now();
         int cycle = 0;
 
         initialize();
@@ -34,10 +34,11 @@ namespace fmm
             std::cout << "Iteration nº: " << cycle++ << std::endl;
         }
 
-        auto stop = std::chrono::high_resolution_clock::now(); 
+        auto stop = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double> duration = stop - start;
 
-        std::cout << "Elapsed time = " << duration.count() << " seconds" << std::endl;
+        std::cout << "Elapsed time = " << duration.count() << " seconds"
+                  << std::endl;
 
         return value_function;
     }
@@ -97,7 +98,9 @@ namespace fmm
 
         std::vector<point_t> neighbors = get_neighbors(trial);
 
-        std::cout << "Trial = " << "(" << trial[0] << "," << trial[1] << ") - (" << value_function(trial[0], trial[1]) << ")" << std::endl;
+        // std::cout << "Trial = "
+        //           << "(" << trial[0] << "," << trial[1] << ") - ("
+        //           << value_function(trial[0], trial[1]) << ")" << std::endl;
 
         for(auto i : neighbors)
         {
@@ -106,9 +109,13 @@ namespace fmm
             {
                 auto old_val = value_function(i[0], i[1]);
                 auto new_val = update_value(i);
-                std::cout << "Neighbor = " << "(" << i[0] << "," << i[1] << ") | old_val = " << old_val << " | new_val = " << new_val << std::endl;
+                // std::cout << "Neighbor = "
+                //           << "(" << i[0] << "," << i[1]
+                //           << ") | old_val = " << old_val
+                //           << " | new_val = " << new_val << std::endl;
+
                 if(new_val < old_val)
-                {   
+                {
                     value_function(i[0], i[1]) = new_val;
                     narrow_band.insert_or_update(new_val, i);
                 }
@@ -121,8 +128,9 @@ namespace fmm
     data_t solver_t::update_value(point_t p)
     {
         auto val = data_t{ 0.0 };
-        auto cost_square =
-            cost_function(p[0], p[1]) * cost_function(p[0], p[1]);
+
+        auto cost = grid_space*cost_function(p[0], p[1]);
+        auto cost_square = pow(cost, 2);
 
         std::array<data_t, 2 * DIM> min_candidates;
         min_candidates.fill(std::numeric_limits<int>::max());
@@ -158,7 +166,7 @@ namespace fmm
 
         cost_square > std::abs(a - b)
             ? val = 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
-            : val = cost_square + std::min(a, b);
+            : val = cost + std::min(a, b);
 
         return val;
     }

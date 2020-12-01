@@ -66,7 +66,6 @@ namespace fmm
       private:
         //! Function data
         std::vector<T> data;
-        
     };
 
     template<typename data_t>
@@ -92,10 +91,10 @@ namespace fmm
                   << std::endl;
 
         for(int i = 0; i < dim_size[0]; i++)
-        {   
-            for(int j = 0; j < dim_size[1]; j++){
-                
-                printf("%.3f ", data.at(j + dim_size[0]*i));
+        {
+            for(int j = 0; j < dim_size[1]; j++)
+            {
+                printf("%.3f ", data.at(j + dim_size[0] * i));
             }
 
             std::cout << std::endl;

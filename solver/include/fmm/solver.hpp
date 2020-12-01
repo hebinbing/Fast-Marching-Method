@@ -1,4 +1,4 @@
-#include <chrono> 
+#include <chrono>
 
 #include "defs.hpp"
 #include "function.hpp"
@@ -12,7 +12,8 @@ namespace fmm
         solver_t(function<data_t> f)
             : cost_function(std::move(f)),
               value_function(f.size(), std::numeric_limits<int>::max()),
-              narrow_band()
+              narrow_band(),
+              grid_space(2.0 / (value_function.dim_size[0] - 1))
         {}
 
         //! Solver algorithm. Returns solution
@@ -24,6 +25,8 @@ namespace fmm
         min_heap<data_t> narrow_band;
 
         point_t target;
+
+        data_t grid_space;
 
         //! Finds target coordinates
         bool find_target();

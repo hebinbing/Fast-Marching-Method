@@ -35,13 +35,15 @@ file = h5.File('../data/value_function.h5', "r")
 data = file['value_function'][()]
 file.close()
 
-print(data)
-
-t = np.linspace(math.ceil(-args.npts/2), math.floor(args.npts/2), data.shape[0])
+t = np.linspace(-1, 1, data.shape[0])
+# t = np.linspace(math.ceil(-args.npts/2), math.floor(args.npts/2), data.shape[0])
 x, y = np.meshgrid(t, t, indexing='ij')
 z = np.sqrt((x - args.target[0])**2 + (y - args.target[1])**2)
 
 print('Maximum error:', np.amax(np.abs(z - data)))
+
+# print(data)
+# print(z)
 
 if not args.no_plot:
     plt.pcolormesh(x, y, data, cmap='jet')
