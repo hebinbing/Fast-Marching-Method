@@ -2,6 +2,7 @@
 
 import h5py as h5
 import numpy as np
+import math
 import subprocess
 import argparse
 import matplotlib.pyplot as plt
@@ -38,11 +39,9 @@ file.close()
 
 print(data)
 
-t = np.linspace(-1, 1, data.shape[0])
+t = np.linspace(math.ceil(-args.npts/2), math.floor(args.npts/2), data.shape[0])
 x, y = np.meshgrid(t, t, indexing='ij')
 z = np.sqrt((x - args.target[0])**2 + (y - args.target[1])**2)
-
-print(z)
 
 print('Maximum error:', np.amax(np.abs(z - data)))
 
