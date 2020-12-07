@@ -23,14 +23,15 @@ namespace fmm
     }
 
     function<data_t> solver_t::solve()
-    {
+    {   
         auto start = std::chrono::high_resolution_clock::now();
         int cycle = 0;
 
         initialize();
 
         while(iterate())
-        {
+        {   
+            // narrow_band.print();
             std::cout << "Iteration nº: " << cycle++ << std::endl;
         }
 
@@ -127,36 +128,33 @@ namespace fmm
 
     data_t solver_t::update_value(point_t p)
     {
-        auto val = data_t{ 0.0 };
-
-        auto cost = grid_space*cost_function(p[0], p[1]);
-        auto cost_square = pow(cost, 2);
+        auto const cost = grid_space * 1 / cost_function(p[0], p[1]);
+        auto const cost_square = cost * cost;
 
         std::array<data_t, 2 * DIM> min_candidates;
-        min_candidates.fill(std::numeric_limits<int>::max());
+        min_candidates.fill(std::numeric_limits<data_t>::max());
 
-        for(auto i : get_neighbors(p))
-        {
-            if(i[0] == p[0])
+        for(auto neighbor : get_neighbors(p))
+        {          
+            if(neighbor[1] == p[1])
             {
-                if(i[1] < p[1])
+                if(neighbor[0] < p[0])
                 {
-                    min_candidates[2] = value_function(i[0], i[1]);
+                    min_candidates[0] = value_function(neighbor[0], neighbor[1]);
                 }
                 else
                 {
-                    min_candidates[3] = value_function(i[0], i[1]);
+                    min_candidates[1] = value_function(neighbor[0], neighbor[1]);
                 }
-            }
-            else if(i[1] == p[1])
+            } else if(neighbor[0] == p[0])
             {
-                if(i[0] < p[0])
+                if(neighbor[1] < p[1])
                 {
-                    min_candidates[0] = value_function(i[0], i[1]);
+                    min_candidates[2] = value_function(neighbor[0], neighbor[1]);
                 }
                 else
                 {
-                    min_candidates[1] = value_function(i[0], i[1]);
+                    min_candidates[3] = value_function(neighbor[0], neighbor[1]);
                 }
             }
         }
@@ -164,11 +162,10 @@ namespace fmm
         auto a = std::min(min_candidates[0], min_candidates[1]);
         auto b = std::min(min_candidates[2], min_candidates[3]);
 
-        cost_square > std::abs(a - b)
-            ? val = 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
-            : val = cost + std::min(a, b);
+        return cost_square > std::abs(a - b)
+            ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
+            : cost + std::min(a, b);
 
-        return val;
     }
 
 }    // namespace fmm

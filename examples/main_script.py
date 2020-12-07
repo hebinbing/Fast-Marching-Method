@@ -36,14 +36,15 @@ data = file['value_function'][()]
 file.close()
 
 t = np.linspace(-1, 1, data.shape[0])
-# t = np.linspace(math.ceil(-args.npts/2), math.floor(args.npts/2), data.shape[0])
 x, y = np.meshgrid(t, t, indexing='ij')
 z = np.sqrt((x - args.target[0])**2 + (y - args.target[1])**2)
 
-print('Maximum error:', np.amax(np.abs(z - data)))
+data[i, j] = 1
+rel_error = np.abs(z - data) / data * 100
+rel_error[i, j] = data[i, j] = 0
 
-# print(data)
-# print(z)
+print('Maximum absolute error:', np.amax(np.abs(z - data)))
+print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
 
 if not args.no_plot:
     plt.pcolormesh(x, y, data, cmap='jet')

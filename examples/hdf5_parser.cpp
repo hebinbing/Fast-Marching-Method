@@ -46,7 +46,7 @@ namespace io
                std::string const& dataset_name,
                fmm::function<fmm::data_t> f)
     {
-        // Truncate file, if it already exists, erasing all data previously
+        // Truncates file, if it already exists, erasing all data previously
         // stored in the file.
         H5::H5File file(file_name, H5F_ACC_TRUNC);
 
