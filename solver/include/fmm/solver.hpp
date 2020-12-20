@@ -40,6 +40,9 @@ namespace fmm
         //! Get close neighbors
         std::vector<point_t> get_neighbors(point_t c);
 
+        //! Get existing neighbors in specific order
+        std::array<data_t, 2*DIM> get_valid_neighbors_values(point_t c);
+
         //! Calculation of new node value
         data_t update_value(point_t p);
     };

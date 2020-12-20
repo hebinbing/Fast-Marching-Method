@@ -47,7 +47,7 @@ print('Maximum absolute error:', np.amax(np.abs(z - data)))
 print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
 
 if not args.no_plot:
-    plt.pcolormesh(x, y, data, cmap='jet')
+    plt.pcolormesh(x, y, data, cmap='jet', shading='auto')
     plt.colorbar()
     plt.contour(x, y, data, levels=10, linestyles='dashed', colors='k')
     plt.axis('equal')

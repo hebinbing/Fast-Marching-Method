@@ -23,14 +23,14 @@ namespace fmm
     }
 
     function<data_t> solver_t::solve()
-    {   
+    {
         auto start = std::chrono::high_resolution_clock::now();
         int cycle = 0;
 
         initialize();
 
         while(iterate())
-        {   
+        {
             // narrow_band.print();
             std::cout << "Iteration nº: " << cycle++ << std::endl;
         }
@@ -54,6 +54,42 @@ namespace fmm
 
         narrow_band.insert_or_update(value_function(target[0], target[1]),
                                      target);
+    }
+
+    std::array<data_t, 2 * DIM> solver_t::get_valid_neighbors_values(point_t c)
+    {
+        std::array<data_t, 2 * DIM> neighbors_vals;
+        neighbors_vals.fill(std::numeric_limits<data_t>::max());
+
+        int k = 0;
+
+        for(int i = -1, j = 0; i < 2; i += 2, k++)
+        {
+            // If i + c[0] < 0 || j + c[0] < 0, it underflows and become
+            // positive
+            if(i + c[0] < value_function.dim_size[0] &&
+               j + c[1] < value_function.dim_size[1])
+            {
+                neighbors_vals.at(k) = value_function(i + c[0], j + c[1]);
+            }
+
+            // k++;
+        }
+
+        for(int j = -1, i = 0; j < 2; j += 2, k++)
+        {
+            // If i + c[0] < 0 || j + c[0] < 0, it underflows and become
+            // positive
+            if(i + c[0] < value_function.dim_size[0] &&
+               j + c[1] < value_function.dim_size[1])
+            {
+                neighbors_vals.at(k) = value_function(i + c[0], j + c[1]);
+            }
+
+            // k++;
+        }
+
+        return neighbors_vals;
     }
 
     std::vector<point_t> solver_t::get_neighbors(point_t c)
@@ -131,41 +167,14 @@ namespace fmm
         auto const cost = grid_space * 1 / cost_function(p[0], p[1]);
         auto const cost_square = cost * cost;
 
-        std::array<data_t, 2 * DIM> min_candidates;
-        min_candidates.fill(std::numeric_limits<data_t>::max());
-
-        for(auto neighbor : get_neighbors(p))
-        {          
-            if(neighbor[1] == p[1])
-            {
-                if(neighbor[0] < p[0])
-                {
-                    min_candidates[0] = value_function(neighbor[0], neighbor[1]);
-                }
-                else
-                {
-                    min_candidates[1] = value_function(neighbor[0], neighbor[1]);
-                }
-            } else if(neighbor[0] == p[0])
-            {
-                if(neighbor[1] < p[1])
-                {
-                    min_candidates[2] = value_function(neighbor[0], neighbor[1]);
-                }
-                else
-                {
-                    min_candidates[3] = value_function(neighbor[0], neighbor[1]);
-                }
-            }
-        }
+        auto min_candidates = get_valid_neighbors_values(p);
 
         auto a = std::min(min_candidates[0], min_candidates[1]);
         auto b = std::min(min_candidates[2], min_candidates[3]);
 
         return cost_square > std::abs(a - b)
-            ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
-            : cost + std::min(a, b);
-
+                   ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
+                   : cost + std::min(a, b);
     }
 
 }    // namespace fmm
