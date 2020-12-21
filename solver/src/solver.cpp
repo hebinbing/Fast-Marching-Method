@@ -172,6 +172,10 @@ namespace fmm
         auto a = std::min(min_candidates[0], min_candidates[1]);
         auto b = std::min(min_candidates[2], min_candidates[3]);
 
+        // std::cout << "Update value : a = " << a << " b = " << b << " cost in this point = " << cost << " cost_square = " << cost_square << " result = " << (cost > std::abs(a - b)
+        //            ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
+        //            : cost + std::min(a, b)) << std::endl;
+
         return cost > std::abs(a - b)
                    ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
                    : cost + std::min(a, b);

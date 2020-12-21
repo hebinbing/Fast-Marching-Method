@@ -47,15 +47,6 @@ max = 0
 max_row = 0
 max_col = 0
 
-for k in range(int(data.size/args.npts)) :
-    for n in range(int(data.size/args.npts)) :
-        if np.abs(z[k,n]-data[k,n]) >= max :
-            max = np.abs(z[k,n]-data[k,n])
-            max_row = k
-            max_col = n
-
-print(max, k, n)
-
 print('Maximum absolute error:', np.amax(np.abs(z - data)))
 print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
 
