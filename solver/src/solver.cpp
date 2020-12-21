@@ -172,9 +172,10 @@ namespace fmm
         auto a = std::min(min_candidates[0], min_candidates[1]);
         auto b = std::min(min_candidates[2], min_candidates[3]);
 
-        return cost_square > std::abs(a - b)
+        return cost > std::abs(a - b)
                    ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
                    : cost + std::min(a, b);
+
     }
 
 }    // namespace fmm

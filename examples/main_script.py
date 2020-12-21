@@ -39,9 +39,22 @@ t = np.linspace(-1, 1, data.shape[0])
 x, y = np.meshgrid(t, t, indexing='ij')
 z = np.sqrt((x - args.target[0])**2 + (y - args.target[1])**2)
 
-data[i, j] = 1
-rel_error = np.abs(z - data) / data * 100
-rel_error[i, j] = data[i, j] = 0
+data[i, j] = z[i,j] = 1
+rel_error = np.abs(data - z) / z * 100
+rel_error[i, j] = data[i, j] = z[i,j] = 0
+
+max = 0
+max_row = 0
+max_col = 0
+
+for k in range(int(data.size/args.npts)) :
+    for n in range(int(data.size/args.npts)) :
+        if np.abs(z[k,n]-data[k,n]) >= max :
+            max = np.abs(z[k,n]-data[k,n])
+            max_row = k
+            max_col = n
+
+print(max, k, n)
 
 print('Maximum absolute error:', np.amax(np.abs(z - data)))
 print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
@@ -49,6 +62,6 @@ print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
 if not args.no_plot:
     plt.pcolormesh(x, y, data, cmap='jet', shading='auto')
     plt.colorbar()
-    plt.contour(x, y, data, levels=10, linestyles='dashed', colors='k')
+    plt.contour(x, y, data, levels=15, linestyles='dashed', colors='k')
     plt.axis('equal')
     plt.show()

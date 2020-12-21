@@ -14,7 +14,7 @@ namespace fmm
               value_function(f.size(), std::numeric_limits<int>::max()),
               narrow_band(),
               grid_space(2.0 / (value_function.dim_size[0] - 1))
-        {}
+        { std::cout << grid_space << std::endl;}
 
         //! Solver algorithm. Returns solution
         function<data_t> solve();

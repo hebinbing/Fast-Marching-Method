@@ -94,7 +94,7 @@ namespace fmm
         {
             for(int j = 0; j < dim_size[1]; j++)
             {
-                printf("%.3f ", data.at(j + dim_size[0] * i));
+                printf("%.5f ", data.at(j + dim_size[0] * i));
             }
 
             std::cout << std::endl;
