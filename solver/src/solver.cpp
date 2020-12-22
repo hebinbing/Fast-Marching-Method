@@ -24,7 +24,6 @@ namespace fmm
 
     function<data_t> solver_t::solve()
     {
-        auto start = std::chrono::high_resolution_clock::now();
         int cycle = 0;
 
         initialize();
@@ -34,12 +33,6 @@ namespace fmm
             // narrow_band.print();
             std::cout << "Iteration nº: " << cycle++ << std::endl;
         }
-
-        auto stop = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = stop - start;
-
-        std::cout << "Elapsed time = " << duration.count() << " seconds"
-                  << std::endl;
 
         return value_function;
     }

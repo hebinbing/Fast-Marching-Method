@@ -3,6 +3,7 @@
 import h5py as h5
 import numpy as np
 import math
+import time
 import subprocess
 import argparse
 import matplotlib.pyplot as plt
@@ -29,7 +30,9 @@ dataset.attrs['Units'] = 'Meters per second'
 
 file.close()
 
+start = time.time()
 subprocess.run('../build/examples/main_example')
+end = time.time()
 
 file = h5.File('../data/value_function.h5', "r")
 data = file['value_function'][()]
@@ -47,8 +50,10 @@ max = 0
 max_row = 0
 max_col = 0
 
+print('Elapsed time:', end-start)
 print('Maximum absolute error:', np.amax(np.abs(z - data)))
 print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
+
 
 if not args.no_plot:
     plt.pcolormesh(x, y, data, cmap='jet', shading='auto')
