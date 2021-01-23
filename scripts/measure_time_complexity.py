@@ -7,13 +7,13 @@ import subprocess
 import time
 import matplotlib.pyplot as plt
 
-# Elapsed time lists - measured vs theoretical
-measured_time = []
-expected_time = []
-
 # Dataset inputs
-npts = [21, 101, 201, 301, 401, 501, 701]
+npts = np.array([501, 701, 1001, 1501, 2001, 3001, 5001])
 target = [0, 0]
+
+# Elapsed time lists - measured vs theoretical
+measured_time = np.zeros(npts.size)
+expected_time = np.zeros(npts.size)
 
 for k in range(len(npts)) :
     print('Subprocess iteration', k, 'with grid total number of points =', npts[k])
@@ -38,28 +38,18 @@ for k in range(len(npts)) :
     subprocess.run('../build/examples/main_example')
     end = time.time()
 
-    measured_time.append(end-start)
-    expected_time.append(npts[k]*np.log(npts[k]))
+    measured_time[k] = end - start
+    expected_time[k] = npts[k] * np.log10(npts[k])
 
-print('Measured time')
+measured_time = measured_time/np.linalg.norm(measured_time)
+expected_time = expected_time/np.linalg.norm(expected_time)
+
+print('Measured time:')
 print(measured_time)
-print('Expected time')
+print('Expected time:')
 print(expected_time)
 
-fig, ax1 = plt.subplots()
-
-color = 'tab:red'
-ax1.set_xlabel('Grid Points')
-ax1.set_ylabel('Thoeritcal constant : O(Nlog(N))', color=color)
-ax1.plot(npts, expected_time, color=color)
-ax1.tick_params(axis='y', labelcolor=color)
-
-ax2 = ax1.twinx() 
-
-color = 'tab:blue'
-ax2.set_ylabel('Measured Time (s)', color=color) 
-ax2.plot(npts, measured_time, color=color)
-ax2.tick_params(axis='y', labelcolor=color)
-
-fig.tight_layout() 
+plt.plot(npts, measured_time, 'ro-', label = 'measured time')
+plt.plot(npts, expected_time, 'bo-', label = 'expected_time')
+plt.legend()
 plt.show()

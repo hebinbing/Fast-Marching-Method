@@ -17,13 +17,13 @@ args = parser.parse_args()
 #Creates or overwrite the data file
 file = h5.File('../data/velocity_data.h5','w')
 
-data = np.ones((args.npts,args.npts))
+data = np.random.randint(1, 100, size=(args.npts, args.npts))
 
 #Coordinates transformation
 i = int(np.floor((args.npts-1)*(1+args.target[0])/2.0)) 
 j = int(np.floor((args.npts-1)*(1+args.target[1])/2.0))
 
-data[i, j] = -1.0
+data[i, j] = -1
 
 dataset = file.create_dataset('velocities', shape=data.shape, dtype=data.dtype, data=data)
 dataset.attrs['Units'] = 'Meters per second'
@@ -46,14 +46,9 @@ data[i, j] = z[i,j] = 1
 rel_error = np.abs(data - z) / z * 100
 rel_error[i, j] = data[i, j] = z[i,j] = 0
 
-max = 0
-max_row = 0
-max_col = 0
-
 print('Elapsed time:', end-start)
 print('Maximum absolute error:', np.amax(np.abs(z - data)))
 print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
-
 
 if not args.no_plot:
     plt.pcolormesh(x, y, data, cmap='jet', shading='auto')
