@@ -24,12 +24,12 @@ namespace fmm
         function<data_t> cost_function;
         min_heap<data_t> narrow_band;
 
-        point_t target;
+        std::vector<point_t> targets;
 
         data_t grid_space;
 
         //! Finds target coordinates
-        bool find_target();
+        bool find_targets();
 
         //! Initial procedure
         void initialize();
