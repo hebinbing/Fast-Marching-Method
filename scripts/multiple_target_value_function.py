@@ -37,29 +37,29 @@ dataset.attrs['Units'] = 'Meters per second'
 
 file.close()
 
-# start = time.time()
-# subprocess.run('../build/examples/main_example')
-# end = time.time()
+start = time.time()
+subprocess.run('../build/examples/main_example')
+end = time.time()
 
-# file = h5.File('../data/value_function.h5', "r")
-# data = file['value_function'][()]
-# file.close()
+file = h5.File('../data/value_function.h5', "r")
+data = file['value_function'][()]
+file.close()
 
-# t = np.linspace(-1, 1, data.shape[0])
-# x, y = np.meshgrid(t, t, indexing='ij')
-# z = np.sqrt((x - args.target[0])**2 + (y - args.target[1])**2)
+t = np.linspace(-1, 1, data.shape[0])
+x, y = np.meshgrid(t, t, indexing='ij')
+z = np.sqrt((x - args.target[0])**2 + (y - args.target[1])**2)
 
-# data[i, j] = z[i,j] = 1
-# rel_error = np.abs(data - z) / z * 100
-# rel_error[i, j] = data[i, j] = z[i,j] = 0
+data[i, j] = z[i,j] = 1
+rel_error = np.abs(data - z) / z * 100
+rel_error[i, j] = data[i, j] = z[i,j] = 0
 
-# print('Elapsed time:', end-start)
-# print('Maximum absolute error:', np.amax(np.abs(z - data)))
-# print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
+print('Elapsed time:', end-start)
+print('Maximum absolute error:', np.amax(np.abs(z - data)))
+print('Maximum relative error:', np.amax(np.abs(rel_error)), '%')
 
-# if not args.no_plot:
-#     plt.pcolormesh(x, y, data, cmap='jet', shading='auto')
-#     plt.colorbar()
-#     plt.contour(x, y, data, levels=15, linestyles='dashed', colors='k')
-#     plt.axis('equal')
-#     plt.show()
+if not args.no_plot:
+    plt.pcolormesh(x, y, data, cmap='jet', shading='auto')
+    plt.colorbar()
+    plt.contour(x, y, data, levels=15, linestyles='dashed', colors='k')
+    plt.axis('equal')
+    plt.show()
