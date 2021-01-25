@@ -47,7 +47,6 @@ trajectory = np.array([start], dtype=float)
 k = 0
 
 while (abs(trajectory[k][0] - target[0]) > args.error_tol) | (abs(trajectory[k][1] - target[1]) > args.error_tol) :
-    
     grad = grad_interpol([[0, trajectory[k][0], trajectory[k][1]], [1, trajectory[k][0], trajectory[k][1]]])
     abs_grad = math.sqrt(grad[0]**2 + grad[1]**2)
 
@@ -69,6 +68,6 @@ plt.colorbar()
 plt.contour(x, y, data, levels=15, linestyles='dashed', colors='k')
 plt.axis('equal')
 
-plt.plot(trajectory[:, 0], trajectory[:, 1], color='red', linestyle='dashed', linewidth = 2)
+plt.plot(trajectory[:, 0], trajectory[:, 1], color='red', linestyle='dashed', linewidth = 2, marker='.', markersize=10)
 
 plt.show()

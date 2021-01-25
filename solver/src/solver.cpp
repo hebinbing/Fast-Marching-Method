@@ -1,4 +1,5 @@
 #include "fmm/solver.hpp"
+#include <algorithm>
 
 namespace fmm
 {
@@ -30,8 +31,8 @@ namespace fmm
 
         while(iterate())
         {
+            std::cout << "Iterat1ion nº: " << cycle++ << std::endl;
             // narrow_band.print();
-            std::cout << "Iteration nº: " << cycle++ << std::endl;
         }
 
         return value_function;
@@ -49,71 +50,92 @@ namespace fmm
                                      target);
     }
 
-    std::array<data_t, 2 * DIM> solver_t::get_valid_neighbors_values(point_t c)
+    std::array<data_t, 2 * DIM> solver_t::get_valid_neighbors_values(point_t p)
     {
         std::array<data_t, 2 * DIM> neighbors_vals;
-        neighbors_vals.fill(std::numeric_limits<data_t>::max());
+        neighbors_vals.fill(std::numeric_limits<int>::max());
 
         int k = 0;
 
         for(int i = -1, j = 0; i < 2; i += 2, k++)
         {
-            // If i + c[0] < 0 || j + c[0] < 0, it underflows and become
+            // If i + p[0] < 0 || j + p[0] < 0, it underflows and become
             // positive
-            if(i + c[0] < value_function.dim_size[0] &&
-               j + c[1] < value_function.dim_size[1])
+            if(i + p[0] < value_function.dim_size[0] &&
+               j + p[1] < value_function.dim_size[1])
             {
-                neighbors_vals.at(k) = value_function(i + c[0], j + c[1]);
+                neighbors_vals.at(k) = value_function(i + p[0], j + p[1]);
             }
 
-            // k++;
         }
 
         for(int j = -1, i = 0; j < 2; j += 2, k++)
         {
-            // If i + c[0] < 0 || j + c[0] < 0, it underflows and become
+            // If i + p[0] < 0 || j + p[0] < 0, it underflows and become
             // positive
-            if(i + c[0] < value_function.dim_size[0] &&
-               j + c[1] < value_function.dim_size[1])
+            if(i + p[0] < value_function.dim_size[0] &&
+               j + p[1] < value_function.dim_size[1])
             {
-                neighbors_vals.at(k) = value_function(i + c[0], j + c[1]);
+                neighbors_vals.at(k) = value_function(i + p[0], j + p[1]);
             }
 
-            // k++;
         }
 
         return neighbors_vals;
     }
 
-    std::vector<point_t> solver_t::get_neighbors(point_t c)
+    std::vector<point_t> solver_t::get_neighbors(point_t p)
     {
         std::vector<point_t> neighbors;
 
         for(int i = -1, j = 0; i < 2; i += 2)
         {
-            // If i + c[0] < 0 || j + c[0] < 0, it underflows and become
+            // If i + p[0] < 0 || j + p[0] < 0, it underflows and become
             // positive
-            if(i + c[0] < value_function.dim_size[0] &&
-               j + c[1] < value_function.dim_size[1])
+            if(i + p[0] < value_function.dim_size[0] &&
+               j + p[1] < value_function.dim_size[1])
             {
-                point_t p{ i + c[0], j + c[1] };
-                neighbors.push_back(p);
+                neighbors.push_back(point_t{ i + p[0], j + p[1] });
             }
         }
 
         for(int j = -1, i = 0; j < 2; j += 2)
         {
-            // If i + c[0] < 0 || j + c[0] < 0, it underflows and become
+            // If i + p[0] < 0 || j + p[0] < 0, it underflows and become
             // positive
-            if(i + c[0] < value_function.dim_size[0] &&
-               j + c[1] < value_function.dim_size[1])
+            if(i + p[0] < value_function.dim_size[0] &&
+               j + p[1] < value_function.dim_size[1])
             {
-                point_t p{ i + c[0], j + c[1] };
-                neighbors.push_back(p);
+                neighbors.push_back(point_t{ i + p[0], j + p[1] });
             }
         }
 
         return neighbors;
+    }
+
+    bool solver_t::is_boundary(point_t p){
+
+        if(p[0] == value_function.dim_size[0] - 1 || p[0] == 0 || p[1] == value_function.dim_size[1] - 1 || p[1] == 0)
+            return 1;
+        
+        return 0;
+    }
+
+    bool solver_t::is_boundary_corner(point_t p){
+        
+        if(p[0] == 0 || p[0] == value_function.dim_size[0] - 1)
+            if(p[1] == 0 || p[1] == value_function.dim_size[1] - 1)
+                return 1;
+
+        return 0;    
+    }
+
+    bool solver_t::is_target(point_t p){
+
+        if(p[0] == target[0] && p[1] == target[1])
+            return 1;
+
+        return 0;
     }
 
     bool solver_t::iterate()
@@ -128,24 +150,27 @@ namespace fmm
 
         std::vector<point_t> neighbors = get_neighbors(trial);
 
-        // std::cout << "Trial = "
-        //           << "(" << trial[0] << "," << trial[1] << ") - ("
-        //           << value_function(trial[0], trial[1]) << ")" << std::endl;
-
         for(auto i : neighbors)
-        {
+        {   
             // ALIVE points do not get updated
             if(value_function(i[0], i[1]) >= value_function(trial[0], trial[1]))
             {
                 auto old_val = value_function(i[0], i[1]);
                 auto new_val = update_value(i);
-                // std::cout << "Neighbor = "
-                //           << "(" << i[0] << "," << i[1]
-                //           << ") | old_val = " << old_val
-                //           << " | new_val = " << new_val << std::endl;
 
                 if(new_val < old_val)
                 {
+                    value_function(i[0], i[1]) = new_val;
+                    narrow_band.insert_or_update(new_val, i);
+                }
+            }
+
+            if(is_boundary(i) && !is_target(i))
+            {
+                auto old_val = value_function(i[0], i[1]);
+                auto new_val = update_boundary_point_value(i);
+
+                if(new_val > old_val){
                     value_function(i[0], i[1]) = new_val;
                     narrow_band.insert_or_update(new_val, i);
                 }
@@ -165,14 +190,43 @@ namespace fmm
         auto a = std::min(min_candidates[0], min_candidates[1]);
         auto b = std::min(min_candidates[2], min_candidates[3]);
 
-        // std::cout << "Update value : a = " << a << " b = " << b << " cost in this point = " << cost << " cost_square = " << cost_square << " result = " << (cost > std::abs(a - b)
-        //            ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
-        //            : cost + std::min(a, b)) << std::endl;
-
         return cost > std::abs(a - b)
                    ? 0.5 * (a + b + sqrt(2 * cost_square - (a - b) * (a - b)))
                    : cost + std::min(a, b);
 
+    }
+
+    data_t solver_t::update_boundary_point_value(point_t p){
+        
+        auto neighbors = get_valid_neighbors_values(p);
+        data_t val = 0;
+        
+        if(is_boundary_corner(p)){
+            std::cout << "Found a corner : " << p[0] << "|" << p[1] << std::endl;
+            
+            std::vector<data_t> valid_neighs;
+            for(auto i : neighbors){
+                if(i < std::numeric_limits<int>::max()){
+                    valid_neighs.push_back(i);
+                }
+            }
+
+            val = std::max(*valid_neighs.begin(), *valid_neighs.end());
+            std::cout << "max val boundary corner: " << val << std::endl;
+
+        } else{
+            if(p[0] == 0){
+                val = neighbors[1];
+            } else if(p[0] == value_function.dim_size[0] - 1){
+                val = neighbors[0];
+            } else if(p[1] == 0){
+                val = neighbors[3];
+            } else if(p[1] == value_function.dim_size[1] - 1){
+                val = neighbors[2];
+            } 
+        }
+
+        return std::max(val, value_function(p[0], p[1]));
     }
 
 }    // namespace fmm

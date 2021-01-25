@@ -17,6 +17,7 @@ args = parser.parse_args()
 #Creates or overwrite the data file
 file = h5.File('../data/velocity_data.h5','w')
 
+# data = np.ones((args.npts,args.npts))
 data = np.random.randint(1, 100, size=(args.npts, args.npts))
 
 #Coordinates transformation
