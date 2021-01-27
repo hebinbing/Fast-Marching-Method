@@ -31,7 +31,7 @@ namespace fmm
         }
 
         //! Read only access to the heap
-        T const node_val(int index) {return data.at(index);}
+        T const node_val(int index) { return data.at(index); }
 
         //! Removes the node with smallest value and returns it coordinates
         void pop();

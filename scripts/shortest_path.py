@@ -76,6 +76,6 @@ plt.colorbar()
 plt.contour(x, y, data, levels=15, linestyles='dashed', colors='k')
 plt.axis('equal')
 
-plt.plot(trajectory[:, 0], trajectory[:, 1], color='red', linestyle='dashed', linewidth = 2, marker='.', markersize=10)
+plt.plot(trajectory[:, 0], trajectory[:, 1], color='red', linestyle='dashed', linewidth = 2, marker='.', markersize=6)
 
 plt.show()

@@ -14,7 +14,9 @@ namespace fmm
               value_function(f.size(), std::numeric_limits<int>::max()),
               narrow_band(),
               grid_space(2.0 / (value_function.dim_size[0] - 1))
-        { std::cout << grid_space << std::endl;}
+        {
+            std::cout << grid_space << std::endl;
+        }
 
         //! Solver algorithm. Returns solution
         function<data_t> solve();
@@ -41,7 +43,7 @@ namespace fmm
         std::vector<point_t> get_neighbors(point_t p);
 
         //! Get neighbors values in specific order
-        std::array<data_t, 2*DIM> get_valid_neighbors_values(point_t p);
+        std::array<data_t, 2 * DIM> get_valid_neighbors_values(point_t p);
 
         //! Calculation of new node value
         data_t update_value(point_t p);

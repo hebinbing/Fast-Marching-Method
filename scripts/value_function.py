@@ -7,15 +7,19 @@ import time
 import subprocess
 import argparse
 import matplotlib.pyplot as plt
+import cv2
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--npts', type=int, default=201, help='Number of grid points per dimension')
-parser.add_argument('--targets', type=float, nargs='+', default=[0.0, 0.0], help='Targets coordinates in a domain with [-1,1]² as vertices; Any number incorrectly inserted will be discarded')
+parser.add_argument('--targets', type=float, nargs='+', default=[0.0, 0.0], help='Targets coordinates in a domain [-1,1]² as vertices; Any number incorrectly inserted will be discarded')
+parser.add_argument('--obstacles', type=float, nargs='+', help='Square obstacles coordinates in a domain [-1,1]² as vertices; Any number incorrectly inserted will be discarded')
+parser.add_argument('--obs_size', type=int, default=10, help='Square obstacles size')
 parser.add_argument('--cost_function', type=str, default='uniform', help='Type of cost function: {uniform, random}')
 parser.add_argument('--no_plot', action='store_true', help='Don\'t plot the result.')
 args = parser.parse_args()
 
 targets = np.array(args.targets, dtype=float)
+obstacles = np.array(args.obstacles, dtype=float)
 
 #Creates or overwrite the data file
 file = h5.File('../data/velocity_data.h5','w')
@@ -30,13 +34,25 @@ else :
     quit()
 
 k = 0
-while k < int(targets.size):
-    print(targets[k], targets[k+1])
-    print(k)
+while k < obstacles.size and obstacles.size != 1:
+    row = int(np.floor((args.npts-1)*(1+args.obstacles[k])/2.0)) 
+    col = int(np.floor((args.npts-1)*(1+args.obstacles[k + 1])/2.0))    
+
+    if max(int(row + args.obs_size/2), int(col + args.obs_size/2)) > args.npts :
+        print('Obstacle too big - invalid inputs')
+        quit()
+
+    for i in range(args.obs_size) :
+        for j in range(args.obs_size) :
+            data[int(row - args.obs_size/2) + i][int(col - args.obs_size/2) + j] = np.average(data)/10
+    
+    k = k + 2
+
+k = 0
+while k < targets.size:
     i = int(np.floor((args.npts-1)*(1+args.targets[k])/2.0)) 
     j = int(np.floor((args.npts-1)*(1+args.targets[k + 1])/2.0))    
     data[i, j] = -1
-    print('data in ', i, j, ':', data[i,j])
     k = k + 2
 
 dataset = file.create_dataset('velocities', shape=data.shape, dtype=data.dtype, data=data)
