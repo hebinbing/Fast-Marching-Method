@@ -25,4 +25,4 @@ chmod +x main_script.py
 # Example
 - Shortest path to exit in a maze
 
-![Maze example](https://github.com/avrocha/Fast-Marching-Method/images/github_example.png)
+![Maze example](https://github.com/avrocha/Fast-Marching-Method/blob/master/images/github_example.png)
