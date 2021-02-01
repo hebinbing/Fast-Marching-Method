@@ -2,7 +2,6 @@
 
 import h5py as h5
 import numpy as np
-import math
 import time
 import subprocess
 import matplotlib.pyplot as plt
@@ -15,7 +14,7 @@ data = data / data[0]
 
 target = np.array([0.72, 0.81], dtype=float)
 
-file = h5.File('../data/velocity_data.h5','w')
+file = h5.File('../data/velocity_data.h5', 'w')
 
 i = int(np.floor((data.shape[0]-1)*(1+target[0])/2.0))
 j = int(np.floor((data.shape[1]-1)*(1+target[1])/2.0))

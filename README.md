@@ -22,6 +22,14 @@ chmod +x main_script.py
 ./main_script.py --help [to see usage]
 ```
 
+# Debug
+```shell
+cd build
+cmake -DCMAKE_CXX_FLAGS="-DNDEBUG" ..
+make
+```
+
+
 # Example
 - Shortest path to exit in a maze
 
