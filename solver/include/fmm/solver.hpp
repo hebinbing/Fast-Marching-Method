@@ -14,9 +14,7 @@ namespace fmm
               value_function(f.size(), std::numeric_limits<int>::max()),
               narrow_band(),
               grid_space(2.0 / (value_function.dim_size[0] - 1))
-        {
-            std::cout << grid_space << std::endl;
-        }
+        {}
 
         //! Solver algorithm. Returns solution
         function<data_t> solve();
@@ -27,11 +25,15 @@ namespace fmm
         min_heap<data_t> narrow_band;
 
         std::vector<point_t> targets;
+        std::vector<point_t> obstacles;
 
         data_t grid_space;
 
         //! Finds target coordinates
         bool find_targets();
+
+        //! Finds obstacles coordinates
+        bool find_obstacles();
 
         //! Initial procedure
         void initialize();
@@ -48,17 +50,6 @@ namespace fmm
         //! Calculation of new node value
         data_t update_value(point_t p);
 
-        //! Calculation of new boundary node value
-        data_t update_boundary_point_value(point_t p);
-
-        //! True if point p is a boundary point
-        bool is_boundary(point_t p);
-
-        //! True if point p is a boundary point in a corner
-        bool is_boundary_corner(point_t p);
-
-        //! True if point p is a target point
-        bool is_target(point_t p);
     };
 
 }    // namespace fmm

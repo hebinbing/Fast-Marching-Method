@@ -4,7 +4,6 @@ import h5py as h5
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator
 import matplotlib.pyplot as plt
-import subprocess
 import math
 import argparse
 
@@ -36,8 +35,6 @@ for i in range(npts):
             targets = np.append(targets, [(2 * i) / (npts - 1) - 1, (2 * j) / (npts - 1) - 1])
 
 # Gradient descent
-print('Detected target coordinates : ', targets)
-
 gradient = np.gradient(value_function, grid_size, edge_order=2)
 
 t = np.linspace(-1, 1, npts)
@@ -51,6 +48,10 @@ k = 0
 while True:
     grad = grad_interpol([[0, trajectory[k][0], trajectory[k][1]], [1, trajectory[k][0], trajectory[k][1]]])
     abs_grad = math.sqrt(grad[0]**2 + grad[1]**2)
+
+    if math.isnan(grad[0]) | math.isnan(grad[1]) | (abs_grad == 0):
+        print('ERROR - Gradient is not defined in point:', trajectory[k])
+        quit()
 
     curr_i = trajectory[k][0] - args.step * grad[0] / abs_grad
     curr_j = trajectory[k][1] - args.step * grad[1] / abs_grad
