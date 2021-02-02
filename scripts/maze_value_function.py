@@ -9,8 +9,10 @@ import cv2
 
 img = cv2.imread('../images/maze.jpg', cv2.IMREAD_IGNORE_ORIENTATION | cv2.IMREAD_GRAYSCALE)
 
+ret, img = cv2.threshold(img, 127, 1, cv2.THRESH_BINARY)
+
 data = np.array(img, dtype=float)
-data = data / data[0]
+# data = data / 255
 
 target = np.array([0.72, 0.81], dtype=float)
 

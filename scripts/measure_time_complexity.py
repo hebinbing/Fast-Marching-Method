@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 
 # Dataset inputs
-npts = np.array([501, 801, 1101, 1301, 1501])
+npts = np.array([601, 1001, 1301, 1501, 1801, 2001])
 target = [0, 0]
 
 # Elapsed time lists - measured vs theoretical

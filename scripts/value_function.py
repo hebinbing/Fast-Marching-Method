@@ -11,8 +11,13 @@ import cv2
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--npts', type=int, default=201, help='Number of grid points per dimension')
-parser.add_argument('--targets', type=float, nargs='+', default=[0.0, 0.0], help='Targets coordinates in a domain [-1,1]² as vertices; Any number incorrectly inserted will be discarded')
-parser.add_argument('--obstacles', type=float, nargs='+', help='Square obstacles coordinates in a domain [-1,1]² as vertices; Any number incorrectly inserted will be discarded')
+parser.add_argument('--targets', type=float, nargs='+', default=[0.0, 0.0], help='Targets coordinates in a domain ['
+                                                                                 '-1,1]² as vertices; Any number '
+                                                                                 'incorrectly inserted will be '
+                                                                                 'discarded')
+parser.add_argument('--obstacles', type=float, nargs='+', help='Square obstacles coordinates in a domain [-1,1]² as '
+                                                               'vertices; Any number incorrectly inserted will be '
+                                                               'discarded')
 parser.add_argument('--obs_size', type=int, default=10, help='Square obstacles size')
 parser.add_argument('--cost_function', type=str, default='uniform', help='Type of cost function: {uniform, random}')
 parser.add_argument('--no_plot', action='store_true', help='Don\'t plot the result.')
@@ -21,12 +26,12 @@ args = parser.parse_args()
 targets = np.array(args.targets, dtype=float)
 obstacles = np.array(args.obstacles, dtype=float)
 
-#Creates or overwrite the data file
+# Creates or overwrite the data file
 file = h5.File('../data/velocity_data.h5','w')
 
-if(args.cost_function == 'uniform'):
-    data = np.ones((args.npts,args.npts))
-elif(args.cost_function == 'random'):
+if args.cost_function == 'uniform':
+    data = np.ones((args.npts, args.npts))
+elif args.cost_function == 'random':
     data = np.random.randint(1, 100, size=(args.npts, args.npts))
 else :
     print('Type of const function not valid')
@@ -34,7 +39,7 @@ else :
     quit()
 
 k = 0
-while k < obstacles.size and obstacles.size != 1:
+while k < obstacles.size & obstacles.size != 1:
     row = int(np.floor((args.npts-1)*(1+args.obstacles[k])/2.0)) 
     col = int(np.floor((args.npts-1)*(1+args.obstacles[k + 1])/2.0))    
 
@@ -44,7 +49,7 @@ while k < obstacles.size and obstacles.size != 1:
 
     for i in range(args.obs_size) :
         for j in range(args.obs_size) :
-            data[int(row - args.obs_size/2) + i][int(col - args.obs_size/2) + j] = np.average(data)/10
+            data[int(row - args.obs_size/2) + i][int(col - args.obs_size/2) + j] = -np.average(data)/10
     
     k = k + 2
 
