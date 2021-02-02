@@ -33,4 +33,4 @@ make
 # Example
 - Shortest path to exit in a maze
 
-![Maze example](https://github.com/avrocha/Fast-Marching-Method/blob/master/images/github_example.png =250x250)
+![Maze example](https://github.com/avrocha/Fast-Marching-Method/blob/master/images/github_example.png | width=100)
