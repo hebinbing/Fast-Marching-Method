@@ -43,10 +43,12 @@ namespace fmm
 
         while(iterate())
         {
+            cycle++;
 #ifdef NDEBUG
             std::cerr << "Iteration nº: " << cycle++ << std::endl;
 #endif
         }
+        std::cerr << "Nº of iterations : " << cycle << std::endl;
 
         return value_function;
     }

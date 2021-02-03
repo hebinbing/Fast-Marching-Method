@@ -7,7 +7,7 @@ import time
 import matplotlib.pyplot as plt
 
 # Dataset inputs
-npts = np.array([601, 1001, 1301, 1501, 1801, 2001])
+npts = np.array([601, 801, 1001, 1101, 1301, 1501, 1801])
 target = [0, 0]
 
 # Elapsed time lists - measured vs theoretical
@@ -15,7 +15,7 @@ measured_time = np.zeros(npts.size)
 expected_time = np.zeros(npts.size)
 
 for k in range(len(npts)):
-    print('Subprocess iteration', k, 'with grid total number of points =', npts[k])
+    print('Subprocess iteration', k, 'with grid size =', npts[k])
 
     # Creates or overwrite the data file
     file = h5.File('../data/velocity_data.h5', 'w')
@@ -39,7 +39,7 @@ for k in range(len(npts)):
     measured_time[k] = float(f.read())
     f.close()
 
-    expected_time[k] = npts[k] * np.log10(npts[k])
+    expected_time[k] = npts[k]**2 * np.log(npts[k]**2)
 
 measured_time = measured_time/measured_time[0]
 expected_time = expected_time/expected_time[0]
