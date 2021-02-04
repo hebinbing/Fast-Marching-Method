@@ -13,9 +13,9 @@ parser.add_argument('--targets', type=float, nargs='+', default=[0.0, 0.0], help
                                                                                  '-1,1]² as vertices; Any number '
                                                                                  'incorrectly inserted will be '
                                                                                  'discarded')
-parser.add_argument('--obstacles', type=float, nargs='+', help='Square obstacles coordinates in a domain [-1,1]² as '
-                                                               'vertices; Any number incorrectly inserted will be '
-                                                               'discarded')
+parser.add_argument('--obstacles', type=float, nargs='+', default=[], help='Square obstacles coordinates in a domain '
+                                                                           '[-1,1]² as vertices; Any number '
+                                                                           'incorrectly inserted will be discarded')
 parser.add_argument('--obs_size', type=int, default=10, help='Square obstacles size')
 parser.add_argument('--cost_function', type=str, default='uniform', help='Type of cost function: {uniform, random};'
                                                                          ' Cost function is normalized to [0;1].')
@@ -24,6 +24,10 @@ args = parser.parse_args()
 
 targets = np.array(args.targets, dtype=float)
 obstacles = np.array(args.obstacles, dtype=float)
+
+if (obstacles.size % 2) != 0:
+    print('Error: Invalid obstacle input')
+    quit()
 
 # Creates or overwrite the data file
 file = h5.File('../data/velocity_data.h5', 'w')
@@ -39,12 +43,12 @@ else:
     quit()
 
 k = 0
-while k < obstacles.size & obstacles.size != 1:
+while k < obstacles.size:
     row = int(np.floor((args.npts - 1) * (1 + args.obstacles[k]) / 2.0))
     col = int(np.floor((args.npts - 1) * (1 + args.obstacles[k + 1]) / 2.0))
 
     if max(int(row + args.obs_size / 2), int(col + args.obs_size / 2)) > args.npts:
-        print('Obstacle too big - invalid inputs')
+        print('Error: Obstacle too big')
         quit()
 
     for i in range(args.obs_size):
@@ -75,10 +79,6 @@ k = 0
 while k < obstacles.size & obstacles.size > 1:
     row = int(np.floor((args.npts - 1) * (1 + args.obstacles[k]) / 2.0))
     col = int(np.floor((args.npts - 1) * (1 + args.obstacles[k + 1]) / 2.0))
-
-    if max(int(row + args.obs_size / 2), int(col + args.obs_size / 2)) > args.npts:
-        print('Obstacle too big - invalid inputs')
-        quit()
 
     for i in range(args.obs_size):
         for j in range(args.obs_size):

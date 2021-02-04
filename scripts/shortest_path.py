@@ -60,7 +60,7 @@ while True:
         
     k = k + 1
 
-    print('Discovering trajectory... | Iteration', k, '| Current position', trajectory[k], '| Velocity interpol', vel_interpol(trajectory[k]))
+    print('Discovering trajectory... | Iteration', k, '| Current position', trajectory[k])
 
     if vel_interpol(trajectory[k]) < 0.00005:
         break
